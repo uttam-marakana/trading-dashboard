@@ -1,11 +1,13 @@
-const LOT_SIZE = 65;
+import { calculatePnL } from "./calculations";
+import { LIMITS } from "./constants";
 
+/* STRATEGY PERFORMANCE */
 export const getStrategyStats = (trades) => {
   const stats = {};
 
   trades.forEach((t) => {
     const strategy = t.strategy || "Unknown";
-    const pnl = (t.exit - t.entry) * LOT_SIZE;
+    const pnl = calculatePnL(t);
 
     if (!stats[strategy]) {
       stats[strategy] = { pnl: 0, trades: 0 };
@@ -18,12 +20,13 @@ export const getStrategyStats = (trades) => {
   return stats;
 };
 
+/* TIME PERFORMANCE */
 export const getTimeStats = (trades) => {
   const stats = {};
 
   trades.forEach((t) => {
     const hour = new Date(t.date).getHours();
-    const pnl = (t.exit - t.entry) * LOT_SIZE;
+    const pnl = calculatePnL(t);
 
     if (!stats[hour]) {
       stats[hour] = { pnl: 0, trades: 0 };
@@ -44,7 +47,7 @@ export const getPerformanceStats = (trades) => {
   let totalLoss = 0;
 
   trades.forEach((t) => {
-    const pnl = (t.exit - t.entry) * LOT_SIZE;
+    const pnl = calculatePnL(t);
 
     if (pnl > 0) {
       wins++;
@@ -69,20 +72,22 @@ export const getPerformanceStats = (trades) => {
   return { winRate, avgWin, avgLoss, expectancy };
 };
 
+/* EXPECTANCY (Standalone for reuse) */
+export const calculateExpectancy = (trades) => {
+  const { expectancy } = getPerformanceStats(trades);
+  return expectancy;
+};
+
 /* AI INSIGHTS */
 export const getAIInsights = (trades) => {
   const insights = [];
 
-  if (trades.length === 0) {
-    return ["No trades yet"];
-  }
-
-  if (trades.length < 3) {
-    return ["Not enough data yet"];
-  }
+  if (trades.length === 0) return ["No trades yet"];
+  if (trades.length < 3) return ["Not enough data yet"];
 
   const performance = getPerformanceStats(trades);
 
+  // Core behavioral signals
   if (performance.winRate < 40) {
     insights.push("Low win rate → improve entries");
   }
@@ -91,13 +96,29 @@ export const getAIInsights = (trades) => {
     insights.push("System losing money → stop & review");
   }
 
+  // Direction discipline
   const types = [...new Set(trades.map((t) => t.type))];
   if (types.length > 1) {
     insights.push("Avoid switching CE/PE direction frequently");
   }
 
-  if (trades.length > 3) {
+  // Overtrading detection (use constants)
+  if (trades.length > LIMITS.MAX_TRADES) {
     insights.push("Overtrading detected");
+  }
+
+  // Advanced signals (NEW EDGE)
+  const losses = trades.filter((t) => calculatePnL(t) < 0);
+
+  if (losses.length >= 2) {
+    insights.push("Multiple losses → reduce size or pause");
+  }
+
+  const highRiskTrades = trades.filter(
+    (t) => t.risk > LIMITS.MAX_RISK_PER_TRADE,
+  );
+  if (highRiskTrades.length > 0) {
+    insights.push("High risk trades detected → tighten SL");
   }
 
   return insights.length ? insights : ["System looks stable"];
