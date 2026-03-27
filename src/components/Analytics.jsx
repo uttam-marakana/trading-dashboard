@@ -17,16 +17,14 @@ const Analytics = ({ trades }) => {
     <div className="card p-3">
       <h6>Analytics</h6>
 
-      {/* EMPTY STATE */}
       {trades.length === 0 && (
         <div className="text-muted small">No data yet</div>
       )}
 
-      {/* STRATEGY */}
+      {/* Strategy */}
       {Object.keys(strategyStats).length > 0 && (
         <div className="mb-3">
           <strong>Strategy Performance</strong>
-
           {Object.entries(strategyStats).map(([key, val]) => (
             <div key={key} className="small d-flex justify-content-between">
               <span>{key}</span>
@@ -38,11 +36,10 @@ const Analytics = ({ trades }) => {
         </div>
       )}
 
-      {/* TIME */}
+      {/* Time */}
       {sortedHours.length > 0 && (
         <div className="mb-3">
           <strong>Time Performance</strong>
-
           {sortedHours.map((key) => (
             <div key={key} className="small d-flex justify-content-between">
               <span>{key}:00</span>
@@ -58,33 +55,28 @@ const Analytics = ({ trades }) => {
         </div>
       )}
 
-      {/* PERFORMANCE */}
+      {/* Performance */}
       {trades.length > 0 && (
         <div className="mb-3">
           <strong>Performance</strong>
-
           <div className="small">
             Win Rate: {performance.winRate.toFixed(1)}%
           </div>
-
           <div className="small text-success">
             Avg Win: ₹{performance.avgWin.toFixed(2)}
           </div>
-
           <div className="small text-danger">
             Avg Loss: ₹{performance.avgLoss.toFixed(2)}
           </div>
-
-          <div className="small">
+          <div className="small fw-bold">
             Expectancy: ₹{performance.expectancy.toFixed(2)}
           </div>
         </div>
       )}
 
-      {/* INSIGHTS */}
+      {/* Insights */}
       <div>
         <strong>AI Insights</strong>
-
         {insights.map((i, idx) => (
           <div key={idx} className="small text-warning">
             ⚠ {i}

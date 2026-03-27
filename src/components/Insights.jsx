@@ -10,18 +10,20 @@ const Insights = ({ trades }) => {
       {/* EMPTY STATE */}
       {trades.length === 0 && (
         <div className="text-muted small">
-          No trades yet. Start logging to see insights.
+          No trades yet. Start logging to generate insights.
         </div>
       )}
 
-      {/* INSIGHTS */}
+      {/* ACTIVE STATE */}
       {trades.length > 0 && (
         <>
           {insights.length === 0 ? (
-            <div className="text-success small">✔ System looks stable</div>
+            <div className="text-success small">
+              ✔ System stable — maintain discipline
+            </div>
           ) : (
             insights.map((i, idx) => (
-              <div key={idx} className="small text-warning">
+              <div key={idx} className="small text-warning mb-1">
                 ⚠ {i}
               </div>
             ))

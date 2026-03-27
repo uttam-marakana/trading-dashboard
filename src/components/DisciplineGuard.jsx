@@ -5,8 +5,8 @@ const DisciplineGuard = ({ trades }) => {
 
   const violations = [];
 
-  if (trades.length > 3) {
-    violations.push("Overtrading");
+  if (trades.length >= 3) {
+    violations.push("Max Trades Reached");
   }
 
   if (summary.isLossLimitHit) {
@@ -15,15 +15,15 @@ const DisciplineGuard = ({ trades }) => {
 
   const types = [...new Set(trades.map((t) => t.type))];
   if (types.length > 1) {
-    violations.push("Direction Switch");
+    violations.push("Direction Switching");
   }
 
   return (
     <div className="card p-3 mb-3">
-      <h6>Discipline</h6>
+      <h6>Discipline Status</h6>
 
       {violations.length === 0 ? (
-        <div className="text-success">✔ Clean execution</div>
+        <div className="text-success">✔ System Clean</div>
       ) : (
         violations.map((v, i) => (
           <div key={i} className="text-danger">
