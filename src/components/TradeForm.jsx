@@ -91,7 +91,12 @@ const TradeForm = ({ addTrade, session }) => {
             </div>
 
             <div className="col-6">
-              <Field name="entry" type="number" className="form-control" />
+              <Field
+                name="entry"
+                placeholder="Entry"
+                type="number"
+                className="form-control"
+              />
               <ErrorMessage
                 name="entry"
                 component="div"
@@ -100,7 +105,12 @@ const TradeForm = ({ addTrade, session }) => {
             </div>
 
             <div className="col-6">
-              <Field name="exit" type="number" className="form-control" />
+              <Field
+                name="exit"
+                placeholder="Exit"
+                type="number"
+                className="form-control"
+              />
               <ErrorMessage
                 name="exit"
                 component="div"
@@ -112,13 +122,19 @@ const TradeForm = ({ addTrade, session }) => {
               <Field name="sl" type="number" className="form-control" />
               <ErrorMessage
                 name="sl"
+                placeholder="Stop Loss"
                 component="div"
                 className="text-danger small"
               />
             </div>
 
             <div className="col-6">
-              <Field name="qty" type="number" className="form-control" />
+              <Field
+                name="qty"
+                
+                type="number"
+                className="form-control"
+              />
               <ErrorMessage
                 name="qty"
                 component="div"
