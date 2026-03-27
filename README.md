@@ -57,30 +57,47 @@ A professional-grade trading dashboard built with React + Vite, designed to help
 
 ```
 src/
- ├── components/
- │    ├── TradeForm.jsx
- │    ├── TradeList.jsx
- │    ├── SummaryCard.jsx
- │    ├── DisciplineGuard.jsx
- │    ├── TradeCalculator.jsx
- │    ├── RiskEngine.jsx
- │    ├── EquityChart.jsx
- │    ├── Analytics.jsx
- │    ├── Insights.jsx
- │
- ├── utils/
- │    ├── calculations.js
- │    ├── analytics.js
- │
- ├── hooks/
- │    ├── useLocalStorage.js
- │
- ├── context/
- │    ├── ThemeContext.jsx
- │
- ├── App.jsx
- ├── main.jsx
- ├── styles.css
+│
+├── core/                          # 🧠 SYSTEM BRAIN (ENFORCEMENT LAYER)
+│   ├── executionEngine.js         # Central decision engine (ALLOW / BLOCK trade)
+│   ├── tradeValidator.js          # Validates input (entry, SL, strategy, type)
+│   ├── riskManager.js             # Risk calculation + validation (₹ cap)
+│   ├── disciplineManager.js       # Daily rules (trades, loss, target)
+│   └── marketContext.js           # (Future) Market type detection
+│
+├── store/                         # ⚙️ STATE ABSTRACTION (LIGHT LAYER)
+│   ├── sessionStore.js            # Creates session object (pnl, trades, lock)
+│   └── tradeStore.js              # Trade helpers (add, count)
+│
+├── components/                    # 🎨 UI LAYER (NO BUSINESS LOGIC)
+│   ├── TradeForm.jsx              # Sends trade → executionEngine
+│   ├── TradeList.jsx              # Immutable trade display (NET PnL)
+│   ├── TradeCalculator.jsx        # Pre-trade validation (charges + BE)
+│   ├── RiskEngine.jsx             # Risk preview (UI only)
+│   ├── DisciplineGuard.jsx        # Displays violations (no enforcement)
+│   ├── Analytics.jsx              # Strategy, time, performance stats
+│   ├── Insights.jsx               # AI behavioral signals (quick view)
+│   ├── EquityChart.jsx            # Net equity curve (after charges)
+│   ├── SummaryCard.jsx            # Net PnL + capital snapshot
+│   └── ThemeToggle.jsx            # UI theme switch
+│
+├── utils/                         # 🔧 PURE FUNCTIONS (SHARED LOGIC)
+│   ├── calculations.js            # PnL, charges, summary (NET focused)
+│   ├── analytics.js               # Stats, expectancy, AI insights
+│   ├── constants.js               # System limits (risk, trades, loss)
+│   └── missedTrades.js            # Behavioral logging (future edge)
+│
+├── hooks/                         # ⚛️ REUSABLE HOOKS
+│   └── useLocalStorage.js         # Persistent state (safe storage)
+│
+├── context/                       # 🌗 UI CONTEXT (OPTIONAL)
+│   └── ThemeContext.jsx           # Light/Dark mode handling
+│
+├── styles/                        # 🎨 STYLING
+│   └── index.css                 # Global + glass UI styles
+│
+├── App.jsx                        # 🔗 ROOT COMPOSITION (session + layout)
+├── main.jsx                       # React entry point
 ```
 
 ---
