@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import { calculateCharges, calculatePnL } from "../utils/calculations";
+import { getTradeQualityScore } from "../utils/scoreEngine";
 
 const TradeList = ({ trades }) => {
   return (
@@ -10,6 +11,7 @@ const TradeList = ({ trades }) => {
         const pnl = calculatePnL(t);
         const charges = calculateCharges(t);
         const net = pnl - charges;
+        const quality = getTradeQualityScore(t);
 
         return (
           <div key={t.id} className="trade-item p-2 mb-2">
@@ -29,6 +31,21 @@ const TradeList = ({ trades }) => {
 
             <div className="text-muted small">
               Gross: ₹{pnl.toFixed(2)} | Charges: ₹{charges.toFixed(2)}
+            </div>
+
+            <div className="small">
+              Quality:{" "}
+              <strong
+                className={
+                  quality >= 8
+                    ? "text-success"
+                    : quality >= 5
+                      ? "text-warning"
+                      : "text-danger"
+                }
+              >
+                {quality}/10
+              </strong>
             </div>
 
             <div className="text-muted small">
