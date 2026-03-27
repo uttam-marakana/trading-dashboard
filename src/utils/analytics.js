@@ -1,26 +1,24 @@
 import { calculatePnL } from "./calculations";
 import { LIMITS } from "./constants";
 
-/* STRATEGY PERFORMANCE */
+/* STRATEGY */
 export const getStrategyStats = (trades) => {
   const stats = {};
 
   trades.forEach((t) => {
-    const strategy = t.strategy || "Unknown";
+    const key = t.strategy || "Unknown";
     const pnl = calculatePnL(t);
 
-    if (!stats[strategy]) {
-      stats[strategy] = { pnl: 0, trades: 0 };
-    }
+    if (!stats[key]) stats[key] = { pnl: 0, trades: 0 };
 
-    stats[strategy].pnl += pnl;
-    stats[strategy].trades++;
+    stats[key].pnl += pnl;
+    stats[key].trades++;
   });
 
   return stats;
 };
 
-/* TIME PERFORMANCE */
+/* TIME */
 export const getTimeStats = (trades) => {
   const stats = {};
 
@@ -28,9 +26,7 @@ export const getTimeStats = (trades) => {
     const hour = new Date(t.date).getHours();
     const pnl = calculatePnL(t);
 
-    if (!stats[hour]) {
-      stats[hour] = { pnl: 0, trades: 0 };
-    }
+    if (!stats[hour]) stats[hour] = { pnl: 0, trades: 0 };
 
     stats[hour].pnl += pnl;
     stats[hour].trades++;
@@ -41,10 +37,10 @@ export const getTimeStats = (trades) => {
 
 /* PERFORMANCE */
 export const getPerformanceStats = (trades) => {
-  let wins = 0;
-  let losses = 0;
-  let totalWin = 0;
-  let totalLoss = 0;
+  let wins = 0,
+    losses = 0,
+    totalWin = 0,
+    totalLoss = 0;
 
   trades.forEach((t) => {
     const pnl = calculatePnL(t);
@@ -58,24 +54,33 @@ export const getPerformanceStats = (trades) => {
     }
   });
 
-  const totalTrades = trades.length;
+  const total = trades.length;
 
-  const winRate = totalTrades ? (wins / totalTrades) * 100 : 0;
+  const winRate = total ? (wins / total) * 100 : 0;
   const avgWin = wins ? totalWin / wins : 0;
   const avgLoss = losses ? totalLoss / losses : 0;
 
   const expectancy =
-    totalTrades > 0
-      ? (winRate / 100) * avgWin + (1 - winRate / 100) * avgLoss
-      : 0;
+    total > 0 ? (winRate / 100) * avgWin + (1 - winRate / 100) * avgLoss : 0;
 
   return { winRate, avgWin, avgLoss, expectancy };
 };
 
-/* EXPECTANCY (Standalone for reuse) */
+/* EXPECTANCY */
 export const calculateExpectancy = (trades) => {
-  const { expectancy } = getPerformanceStats(trades);
-  return expectancy;
+  return getPerformanceStats(trades).expectancy;
+};
+
+/* MISTAKE STATS (NEW) */
+export const getMistakeStats = (trades) => {
+  const stats = {};
+
+  trades.forEach((t) => {
+    if (!t.mistake || t.mistake === "None") return;
+    stats[t.mistake] = (stats[t.mistake] || 0) + 1;
+  });
+
+  return stats;
 };
 
 /* AI INSIGHTS */
@@ -85,41 +90,39 @@ export const getAIInsights = (trades) => {
   if (trades.length === 0) return ["No trades yet"];
   if (trades.length < 3) return ["Not enough data yet"];
 
-  const performance = getPerformanceStats(trades);
+  const perf = getPerformanceStats(trades);
 
-  // Core behavioral signals
-  if (performance.winRate < 40) {
-    insights.push("Low win rate → improve entries");
-  }
+  // Core signals
+  if (perf.winRate < 40) insights.push("Low win rate → improve entries");
 
-  if (performance.expectancy < 0) {
-    insights.push("System losing money → stop & review");
-  }
+  if (perf.expectancy < 0)
+    insights.push("System losing money → review strategy");
 
   // Direction discipline
   const types = [...new Set(trades.map((t) => t.type))];
-  if (types.length > 1) {
-    insights.push("Avoid switching CE/PE direction frequently");
-  }
+  if (types.length > 1) insights.push("Avoid CE/PE switching");
 
-  // Overtrading detection (use constants)
-  if (trades.length > LIMITS.MAX_TRADES) {
-    insights.push("Overtrading detected");
-  }
+  // Overtrading
+  if (trades.length > LIMITS.MAX_TRADES) insights.push("Overtrading detected");
 
-  // Advanced signals (NEW EDGE)
+  // Loss cluster
   const losses = trades.filter((t) => calculatePnL(t) < 0);
+  if (losses.length >= 2)
+    insights.push("Multiple losses → reduce size or stop");
 
-  if (losses.length >= 2) {
-    insights.push("Multiple losses → reduce size or pause");
-  }
-
-  const highRiskTrades = trades.filter(
-    (t) => t.risk > LIMITS.MAX_RISK_PER_TRADE,
+  // Risk violation
+  const risky = trades.filter(
+    (t) => t.risk && t.risk > LIMITS.MAX_RISK_PER_TRADE,
   );
-  if (highRiskTrades.length > 0) {
-    insights.push("High risk trades detected → tighten SL");
-  }
+  if (risky.length) insights.push("High risk trades → tighten SL");
+
+  // Behavior layer
+  const lowConfidence = trades.filter((t) => t.confidence <= 2);
+  if (lowConfidence.length) insights.push("Low confidence trades detected");
+
+  const mistakes = getMistakeStats(trades);
+  if (Object.keys(mistakes).length)
+    insights.push("Repeated mistakes → review behavior");
 
   return insights.length ? insights : ["System looks stable"];
 };
