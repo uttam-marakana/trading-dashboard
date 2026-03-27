@@ -1,121 +1,200 @@
-# 📊 Execution OS — Trading Decision System
+# 🧠 TradeOS — Execution Intelligence System
 
-A professional-grade trading dashboard built with React + Vite, designed to help traders **track, analyze, and improve execution discipline**.
+A professional-grade trading system built with **React + Vite**, designed to transform traders from:
+
+❌ Emotional decision-makers
+➡️
+✅ System-driven operators
 
 ---
 
-## 🚀 Features
+# 🎯 Core Philosophy
 
-### ✅ Core
+> This is NOT a trading app.
+> This is a **decision control system**.
 
-* Trade logging system
-* Real-time PnL tracking
+TradeOS enforces:
+
+* Discipline
+* Risk control
+* Behavioral awareness
+* Execution quality
+
+---
+
+# 🚀 Features
+
+## ✅ Core System
+
+* Trade logging (immutable history)
+* Real-time **Net PnL (after charges)**
 * Angel One brokerage calculation
 * Equity curve visualization
 
-### 🧠 Decision Engine
+---
 
-* Trade calculator (before entry validation)
+## 🧠 Decision Engine (Pre-Trade Layer)
+
+* Live trade evaluation (before execution)
 * Break-even move detection
-* Charges preview
+* Charges + net PnL preview
+* Risk/Reward calculation
+* ⚠ Real-time warnings
 
-### ⚠️ Risk Engine
+---
 
-* Position sizing
+## ⚠️ Risk Engine
+
+* Position sizing logic
 * Risk per trade calculation
-* Capital protection logic
+* Max risk enforcement (₹300)
 
-### 📊 Analytics Engine
+---
+
+## 🔥 Execution Engine (Enforcement Layer)
+
+* Validates every trade before execution
+* Blocks:
+
+  * High-risk trades
+  * Low-confidence trades
+  * Invalid setups
+* Central decision engine (ALLOW / BLOCK)
+
+---
+
+## 📊 Analytics Engine
 
 * Strategy performance tracking
 * Time-based performance analysis
-* Win rate & expectancy
-* AI-based insights (behavior detection)
-
-### 🧘 Discipline System
-
-* Daily loss limit enforcement
-* Overtrading detection
-* Direction switching alerts
+* Win rate, avg win/loss
+* Expectancy calculation
 
 ---
 
-## 🧱 Tech Stack
+## 🧠 AI Insights (Behavior Layer)
 
-| Layer    | Technology                   |
-| -------- | ---------------------------- |
-| Frontend | React + Vite                 |
-| UI       | Bootstrap + Custom Glass CSS |
-| Forms    | Formik                       |
-| Charts   | Recharts                     |
-| State    | React Hooks + LocalStorage   |
-| Date     | Day.js                       |
+Detects:
+
+* Overtrading
+* Direction switching
+* Low win rate
+* Negative expectancy
+* Risk violations
+* Repeated mistakes
 
 ---
 
-## 📁 Folder Structure
+## 🧘 Discipline System
+
+* Max 3 trades/day
+* Daily loss limit (₹600)
+* Profit target lock (₹1200)
+* Hard session lock enforcement
+
+---
+
+## 📊 Scoring System (PRO EDGE)
+
+### 🎯 Discipline Score
+
+* Daily behavior quality (0–10)
+
+### 📈 Trade Quality Score
+
+* Per-trade execution quality
+
+---
+
+## 🧠 Pre-Trade Intelligence (KEY FEATURE)
+
+Before execution, system shows:
+
+* Risk (₹)
+* R:R ratio
+* Net PnL (after charges)
+* Break-even move
+* ⚠ Warnings (bad trades)
+
+---
+
+# 🧱 Tech Stack
+
+| Layer    | Technology           |
+| -------- | -------------------- |
+| Frontend | React + Vite         |
+| UI       | Bootstrap + Glass UI |
+| Forms    | Formik               |
+| Charts   | Recharts             |
+| State    | Hooks + LocalStorage |
+| Date     | Day.js               |
+
+---
+
+# 📁 Folder Structure
 
 ```
 src/
 │
-├── core/                          # 🧠 SYSTEM BRAIN (ENFORCEMENT LAYER)
-│   ├── executionEngine.js         # Central decision engine (ALLOW / BLOCK trade)
-│   ├── tradeValidator.js          # Validates input (entry, SL, strategy, type)
-│   ├── riskManager.js             # Risk calculation + validation (₹ cap)
-│   ├── disciplineManager.js       # Daily rules (trades, loss, target)
-│   └── marketContext.js           # (Future) Market type detection
+├── core/              # 🧠 SYSTEM BRAIN
+│   ├── executionEngine.js
+│   ├── tradeValidator.js
+│   ├── riskManager.js
+│   ├── disciplineManager.js
+│   └── marketContext.js
 │
-├── store/                         # ⚙️ STATE ABSTRACTION (LIGHT LAYER)
-│   ├── sessionStore.js            # Creates session object (pnl, trades, lock)
-│   └── tradeStore.js              # Trade helpers (add, count)
+├── store/             # ⚙️ SESSION LAYER
+│   ├── sessionStore.js
+│   └── tradeStore.js
 │
-├── components/                    # 🎨 UI LAYER (NO BUSINESS LOGIC)
-│   ├── TradeForm.jsx              # Sends trade → executionEngine
-│   ├── TradeList.jsx              # Immutable trade display (NET PnL)
-│   ├── TradeCalculator.jsx        # Pre-trade validation (charges + BE)
-│   ├── RiskEngine.jsx             # Risk preview (UI only)
-│   ├── DisciplineGuard.jsx        # Displays violations (no enforcement)
-│   ├── DisciplineScore.jsx        # 
-│   ├── Analytics.jsx              # Strategy, time, performance stats
-│   ├── Insights.jsx               # AI behavioral signals (quick view)
-│   ├── EquityChart.jsx            # Net equity curve (after charges)
-│   ├── SummaryCard.jsx            # Net PnL + capital snapshot
-│   └── ThemeToggle.jsx            # UI theme switch
+├── components/        # 🎨 UI (NO LOGIC)
+│   ├── TradeForm.jsx
+│   ├── PreTradeInsights.jsx
+│   ├── TradeList.jsx
+│   ├── TradeCalculator.jsx
+│   ├── RiskEngine.jsx
+│   ├── DisciplineGuard.jsx
+│   ├── DisciplineScore.jsx
+│   ├── Analytics.jsx
+│   ├── Insights.jsx
+│   ├── EquityChart.jsx
+│   ├── SummaryCard.jsx
+│   └── ThemeToggle.jsx
 │
-├── utils/                         # 🔧 PURE FUNCTIONS (SHARED LOGIC)
-│   ├── calculations.js            # PnL, charges, summary (NET focused)
-│   ├── analytics.js               # Stats, expectancy, AI insights
-│   ├── constants.js               # System limits (risk, trades, loss)
-│   ├── missedTrades.js            # Behavioral logging (future edge)
-│   └── scoreEngine.js             # 
+├── utils/             # 🔧 CORE LOGIC
+│   ├── calculations.js
+│   ├── analytics.js
+│   ├── constants.js
+│   ├── scoreEngine.js
+│   └── missedTrades.js
 │
-├── hooks/                         # ⚛️ REUSABLE HOOKS
-│   └── useLocalStorage.js         # Persistent state (safe storage)
+├── hooks/
+│   └── useLocalStorage.js
 │
-├── context/                       # 🌗 UI CONTEXT (OPTIONAL)
-│   └── ThemeContext.jsx           # Light/Dark mode handling
+├── context/
+│   └── ThemeContext.jsx
 │
-├── styles/                        # 🎨 STYLING
-│   └── index.css                 # Global + glass UI styles
+├── styles/
+│   └── index.css
 │
-├── App.jsx                        # 🔗 ROOT COMPOSITION (session + layout)
-├── main.jsx                       # React entry point
+├── App.jsx
+├── main.jsx
 ```
 
 ---
 
-## ⚙️ Installation
+# ⚙️ Installation
 
 ```bash
-git clone <your-repo>
-cd execution-os
+git clone <repo-url>
+cd tradeos
 yarn install
 yarn dev
 ```
 
 ---
 
-## 📦 Required Libraries
+# 📦 Dependencies
 
 ```bash
 yarn add formik uuid dayjs recharts
@@ -123,84 +202,89 @@ yarn add formik uuid dayjs recharts
 
 ---
 
-## 🌗 Theme Support
+# 🧠 How to Use
 
-* Light / Dark toggle
-* Persistent via localStorage
-* Glass UI design
+## Execution Workflow
 
----
+1. Use Trade Calculator
+   → Validate trade
 
-## 🧠 How Traders Should Use This
-
-### Step-by-step:
-
-1. Open Trade Calculator
-   → Check if trade is worth taking
-
-2. Use Risk Engine
-   → Define SL & position size
+2. Check Pre-Trade Insights
+   → Risk, R:R, warnings
 
 3. Execute trade
+   → Engine validates or blocks
 
 4. Log trade
+   → Stored with behavior data
 
-5. Review analytics daily
+5. Review:
+
+* Analytics
+* Insights
+* Discipline score
 
 ---
 
-## 🎯 Why This Is Powerful
+# 🔐 System Guarantees
 
-Most traders:
+* No overtrading beyond limits
+* No high-risk trades
+* No invalid setups
+* No emotional execution bypass
+
+---
+
+# 🎯 Why TradeOS is Different
+
+Most tools:
 
 * Track trades ❌
-* Ignore behavior ❌
 
-This system:
+TradeOS:
 
-* Tracks behavior ✅
-* Detects mistakes ✅
-* Improves decision-making ✅
-
----
-
-## 🚀 Deployment (Vercel)
-
-### 1. Push to GitHub
-
-```bash
-git init
-git add .
-git commit -m "initial"
-git remote add origin <repo-url>
-git push -u origin main
-```
-
-### 2. Deploy to Vercel
-
-* Go to https://vercel.com
-* Import GitHub repo
-* Framework: Vite
-* Click Deploy
+* Controls decisions ✅
+* Enforces discipline ✅
+* Prevents bad trades ✅
 
 ---
 
-## 📈 Future Roadmap
+# 🚀 Deployment (Vercel)
 
-* AI trade suggestions
-* Backend (Firebase / Supabase)
-* Multi-account support
+1. Push to GitHub
+2. Import repo in Vercel
+3. Select Vite
+4. Deploy
+
+---
+
+# 📈 Future Roadmap
+
+* Behavior AI blocker
+* Broker API integration
+* Cloud sync (multi-device)
+* Multi-user SaaS system
 * Strategy backtesting
 
 ---
 
-## 👨‍💻 Author
+# 💼 Product Vision
 
-Built for disciplined traders who want to become **system-driven operators**.
+TradeOS → evolves into:
+
+> **Execution Intelligence SaaS for traders**
 
 ---
 
-## ⚠️ Disclaimer
+# 👨‍💻 Author
+
+Built for traders who want to become:
+
+> **Disciplined, system-driven operators**
+
+---
+
+# ⚠️ Disclaimer
 
 This tool is for educational and analytical purposes only.
-Trading involves risk.
+Trading involves financial risk.
