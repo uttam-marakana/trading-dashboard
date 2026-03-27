@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { calculateCharges } from "../utils/calculations";
+import { calculateCharges, calculatePnL } from "../utils/calculations";
 
 const LOT_SIZE = 65;
 
@@ -13,13 +13,11 @@ const TradeCalculator = () => {
   };
 
   const charges = calculateCharges(trade);
-
-  const gross = (trade.exit - trade.entry) * LOT_SIZE;
+  const gross = calculatePnL(trade);
   const net = gross - charges;
 
   const breakEvenMove = charges / LOT_SIZE;
-
-  const isValid = breakEvenMove < 10; // your scalping threshold
+  const isValid = breakEvenMove < 10;
 
   return (
     <div className="card p-3">
@@ -48,15 +46,15 @@ const TradeCalculator = () => {
       </div>
 
       <div className="mt-3 small">
-        <div>Charges: ₹{charges}</div>
-        <div>Gross PnL: ₹{gross.toFixed(2)}</div>
+        <div>Charges: ₹{charges.toFixed(2)}</div>
+        <div>Gross: ₹{gross.toFixed(2)}</div>
         <div className={net >= 0 ? "text-success" : "text-danger"}>
-          Net PnL: ₹{net.toFixed(2)}
+          Net: ₹{net.toFixed(2)}
         </div>
-        <div>Break-even move: {breakEvenMove.toFixed(2)} pts</div>
+        <div>Break-even: {breakEvenMove.toFixed(2)} pts</div>
 
         <div className={isValid ? "text-success" : "text-danger mt-2"}>
-          {isValid ? "✔ Valid Trade" : "⚠ Not worth (too costly)"}
+          {isValid ? "✔ Valid Trade" : "⚠ Not worth"}
         </div>
       </div>
     </div>

@@ -1,23 +1,11 @@
 import { Formik, Form, Field } from "formik";
 import { v4 as uuidv4 } from "uuid";
-import { calculateSummary } from "../utils/calculations";
+import { executionEngine } from "../core/executionEngine";
 
 const premiumOptions = ["ATM", "ITM", "OTM"];
 const strategies = ["Scalping", "ORB", "Reversal", "Breakdown"];
 
-const TradeForm = ({ addTrade, trades }) => {
-  const summary = calculateSummary(trades);
-
-  const locked = trades.length >= 3 || summary.isLossLimitHit;
-
-  if (locked) {
-    return (
-      <div className="alert alert-danger text-center">
-        🚫 Trading Locked (Rule Hit)
-      </div>
-    );
-  }
-
+const TradeForm = ({ addTrade, session }) => {
   return (
     <Formik
       initialValues={{
@@ -26,16 +14,29 @@ const TradeForm = ({ addTrade, trades }) => {
         premium: "ATM",
         entry: "",
         exit: "",
+        sl: "",
+        qty: 1,
         strategy: "Scalping",
       }}
       onSubmit={(values, { resetForm }) => {
-        addTrade({
-          id: uuidv4(),
+        const tradeData = {
           ...values,
-          pnl: values.exit - values.entry,
+          id: uuidv4(),
+          entry: Number(values.entry),
+          exit: Number(values.exit),
+          sl: Number(values.sl),
+          qty: Number(values.qty),
           date: new Date(),
-        });
+        };
 
+        const result = executionEngine(tradeData, session);
+
+        if (!result.allowed) {
+          alert(`🚫 You’re DONE for the day. Walk away.: ${result.reason}`);
+          return;
+        }
+
+        addTrade(result.trade);
         resetForm();
       }}
     >
@@ -74,6 +75,24 @@ const TradeForm = ({ addTrade, trades }) => {
             <Field name="exit" type="number" className="form-control" />
           </div>
 
+          <div className="col-6">
+            <Field
+              name="sl"
+              type="number"
+              placeholder="Stop Loss"
+              className="form-control"
+            />
+          </div>
+
+          <div className="col-6">
+            <Field
+              name="qty"
+              type="number"
+              placeholder="Qty"
+              className="form-control"
+            />
+          </div>
+
           <div className="col-12">
             <Field as="select" name="strategy" className="form-control">
               {strategies.map((s) => (
@@ -82,7 +101,7 @@ const TradeForm = ({ addTrade, trades }) => {
             </Field>
           </div>
 
-          <button className="btn btn-primary w-100 mt-2">Add Trade</button>
+          <button className="btn btn-primary w-100 mt-2">Execute Trade</button>
         </div>
       </Form>
     </Formik>

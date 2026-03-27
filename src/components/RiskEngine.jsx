@@ -1,13 +1,14 @@
 import { useState } from "react";
 
 const LOT_SIZE = 65;
-const MAX_RISK_PER_TRADE = 500; // ₹500 risk cap
+const MAX_RISK_PER_TRADE = 500;
 
 const RiskEngine = () => {
   const [entry, setEntry] = useState("");
   const [sl, setSL] = useState("");
 
-  const riskPerLot = (entry - sl) * LOT_SIZE;
+  const riskPerLot = entry && sl ? Math.abs(entry - sl) * LOT_SIZE : 0;
+
   const allowedLots =
     riskPerLot > 0 ? Math.floor(MAX_RISK_PER_TRADE / riskPerLot) : 0;
 
@@ -22,7 +23,7 @@ const RiskEngine = () => {
             type="number"
             className="form-control"
             value={entry}
-            onChange={(e) => setEntry(e.target.value)}
+            onChange={(e) => setEntry(Number(e.target.value))}
           />
         </div>
 
@@ -32,7 +33,7 @@ const RiskEngine = () => {
             type="number"
             className="form-control"
             value={sl}
-            onChange={(e) => setSL(e.target.value)}
+            onChange={(e) => setSL(Number(e.target.value))}
           />
         </div>
       </div>
