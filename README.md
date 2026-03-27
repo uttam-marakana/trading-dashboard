@@ -75,6 +75,7 @@ src/
 │   ├── TradeCalculator.jsx        # Pre-trade validation (charges + BE)
 │   ├── RiskEngine.jsx             # Risk preview (UI only)
 │   ├── DisciplineGuard.jsx        # Displays violations (no enforcement)
+│   ├── DisciplineScore.jsx        # 
 │   ├── Analytics.jsx              # Strategy, time, performance stats
 │   ├── Insights.jsx               # AI behavioral signals (quick view)
 │   ├── EquityChart.jsx            # Net equity curve (after charges)
@@ -85,7 +86,8 @@ src/
 │   ├── calculations.js            # PnL, charges, summary (NET focused)
 │   ├── analytics.js               # Stats, expectancy, AI insights
 │   ├── constants.js               # System limits (risk, trades, loss)
-│   └── missedTrades.js            # Behavioral logging (future edge)
+│   ├── missedTrades.js            # Behavioral logging (future edge)
+│   └── scoreEngine.js             # 
 │
 ├── hooks/                         # ⚛️ REUSABLE HOOKS
 │   └── useLocalStorage.js         # Persistent state (safe storage)
