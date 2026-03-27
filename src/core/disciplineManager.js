@@ -1,21 +1,17 @@
+import { LIMITS } from "../utils/constants";
+
 export function checkDiscipline(session) {
   const { tradesToday, pnlToday, isLocked } = session;
 
-  if (isLocked) {
-    return { allowed: false, reason: "Trading locked" };
-  }
-
-  if (tradesToday >= 3) {
+  if (isLocked) return { allowed: false, reason: "Locked" };
+  if (tradesToday >= LIMITS.MAX_TRADES)
     return { allowed: false, reason: "Max trades reached" };
-  }
 
-  if (pnlToday <= -600) {
-    return { allowed: false, reason: "Daily loss limit hit" };
-  }
+  if (pnlToday <= -LIMITS.MAX_LOSS)
+    return { allowed: false, reason: "Loss limit hit" };
 
-  if (pnlToday >= 1200) {
+  if (pnlToday >= LIMITS.MAX_PROFIT)
     return { allowed: false, reason: "Target reached" };
-  }
 
   return { allowed: true };
 }
