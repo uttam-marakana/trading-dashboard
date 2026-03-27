@@ -1,0 +1,200 @@
+/* =========================
+   THEME VARIABLES
+========================= */
+
+/* DARK (DEFAULT) */
+:root {
+  --bg: #020617;
+  --bg-gradient: radial-gradient(circle at top, #1e293b, #020617);
+
+  --card-bg: rgba(255, 255, 255, 0.05);
+  --border: rgba(255, 255, 255, 0.1);
+
+  --text: #cbd5f5;
+  --text-strong: #ffffff;
+
+  --profit: #22c55e;
+  --loss: #ef4444;
+
+  --accent: #a855f7;
+}
+
+/* LIGHT MODE */
+[data-theme="light"] {
+  --bg: #f4f6fb;
+  --bg-gradient: linear-gradient(to bottom, #ffffff, #eaeef6);
+
+  --card-bg: rgba(255, 255, 255, 0.8);
+  --border: rgba(0, 0, 0, 0.08);
+
+  --text: #1a1a1a;
+  --text-strong: #000000;
+
+  --profit: #16a34a;
+  --loss: #dc2626;
+
+  --accent: #7c3aed;
+}
+
+/* =========================
+   GLOBAL
+========================= */
+
+body {
+  margin: 0;
+  background: var(--bg-gradient);
+  color: var(--text);
+  font-family: system-ui, -apple-system, sans-serif;
+  transition: all 0.3s ease;
+}
+
+h1, h2, h3, h4, h5 {
+  color: var(--text-strong);
+}
+
+/* =========================
+   GLASS CARD SYSTEM
+========================= */
+
+.card,
+.glass-card {
+  background: var(--card-bg);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+}
+
+/* =========================
+   FORM ELEMENTS
+========================= */
+
+input,
+select {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text-strong) !important;
+  border-radius: 10px !important;
+  padding: 10px;
+}
+
+[data-theme="light"] input,
+[data-theme="light"] select {
+  background: rgba(0, 0, 0, 0.03) !important;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+.btn-primary {
+  background: linear-gradient(135deg, #7c3aed, #a855f7);
+  border: none;
+  border-radius: 10px;
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+}
+
+/* =========================
+   TRADE ITEMS
+========================= */
+
+.trade-item {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  transition: all 0.2s ease;
+}
+
+.trade-item:hover {
+  transform: translateY(-2px);
+}
+
+/* =========================
+   PnL COLORS
+========================= */
+
+.pnl {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.text-success {
+  color: var(--profit) !important;
+}
+
+.text-danger {
+  color: var(--loss) !important;
+}
+
+/* =========================
+   THEME TOGGLE
+========================= */
+
+.theme-toggle {
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  color: var(--text);
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+}
+
+/* =========================
+   LAYOUT HELPERS
+========================= */
+
+.app-container {
+  min-height: 100vh;
+}
+
+/* =========================
+   SCROLLBAR (PRO FEEL)
+========================= */
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 10px;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 1024px) {
+  .card {
+    padding: 14px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .card {
+    padding: 12px !important;
+  }
+
+  h5 {
+    font-size: 16px;
+  }
+
+  .pnl {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .card {
+    border-radius: 12px;
+  }
+
+  input,
+  select {
+    font-size: 14px;
+  }
+}
