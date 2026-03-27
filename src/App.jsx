@@ -10,26 +10,34 @@ import Insights from "./components/Insights";
 import TradeCalculator from "./components/TradeCalculator";
 import RiskEngine from "./components/RiskEngine";
 import Analytics from "./components/Analytics";
+import DisciplineScore from "./components/DisciplineScore";
 
 import { calculateSummary } from "./utils/calculations";
 
 function App() {
   const [trades, setTrades] = useLocalStorage("trades", []);
 
-  // SESSION STATE (CORE ADDITION)
-  const summary = calculateSummary(trades);
+  // 🔥 FILTER TODAY TRADES (CRITICAL FIX)
+  const today = new Date().toDateString();
+
+  const todayTrades = trades.filter(
+    (t) => new Date(t.date).toDateString() === today,
+  );
+
+  const summary = calculateSummary(todayTrades);
 
   const session = {
-    tradesToday: trades.length,
+    tradesToday: todayTrades.length,
     pnlToday: summary.netPnL,
     isLocked:
-      trades.length >= 3 || summary.isLossLimitHit || summary.netPnL >= 1200,
+      todayTrades.length >= 3 ||
+      summary.isLossLimitHit ||
+      summary.netPnL >= 1200,
   };
 
   const addTrade = (trade) => {
-    // HARD LOCK
     if (session.isLocked) {
-      alert("🚫 You’re DONE for the day. Walk away.)");
+      alert("🚫 You’re DONE for the day. Walk away.");
       return;
     }
 
@@ -52,10 +60,12 @@ function App() {
               <RiskEngine />
               <TradeCalculator />
 
-              {/* ENGINE CONNECTED */}
               <TradeForm addTrade={addTrade} session={session} />
 
-              <DisciplineGuard trades={trades} />
+              {/* 🔥 NEW */}
+              <DisciplineScore trades={todayTrades} />
+
+              <DisciplineGuard trades={todayTrades} />
               <Insights trades={trades} />
             </div>
           </div>
@@ -63,7 +73,7 @@ function App() {
           {/* RIGHT */}
           <div className="col-12 col-lg-8">
             <div className="d-flex flex-column gap-3">
-              <SummaryCard trades={trades} />
+              <SummaryCard trades={todayTrades} />
 
               <div className="row g-3">
                 <div className="col-12 col-md-6">
