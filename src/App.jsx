@@ -11,10 +11,28 @@ import TradeCalculator from "./components/TradeCalculator";
 import RiskEngine from "./components/RiskEngine";
 import Analytics from "./components/Analytics";
 
+import { calculateSummary } from "./utils/calculations";
+
 function App() {
   const [trades, setTrades] = useLocalStorage("trades", []);
 
+  // SESSION STATE (CORE ADDITION)
+  const summary = calculateSummary(trades);
+
+  const session = {
+    tradesToday: trades.length,
+    pnlToday: summary.netPnL,
+    isLocked:
+      trades.length >= 3 || summary.isLossLimitHit || summary.netPnL >= 1200,
+  };
+
   const addTrade = (trade) => {
+    // HARD LOCK
+    if (session.isLocked) {
+      alert("🚫 You’re DONE for the day. Walk away.)");
+      return;
+    }
+
     setTrades((prev) => [trade, ...prev]);
   };
 
@@ -33,7 +51,10 @@ function App() {
             <div className="d-flex flex-column gap-3">
               <RiskEngine />
               <TradeCalculator />
-              <TradeForm addTrade={addTrade} trades={trades} />
+
+              {/* ENGINE CONNECTED */}
+              <TradeForm addTrade={addTrade} session={session} />
+
               <DisciplineGuard trades={trades} />
               <Insights trades={trades} />
             </div>
