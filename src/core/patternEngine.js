@@ -1,44 +1,43 @@
 import { calculatePnL } from "../utils/calculations";
 
 export function patternEngine(trades = []) {
-  if (!trades.length) return {};
+  if (!trades.length) {
+    return {
+      lossStreak: 0,
+      bestStrategy: null,
+      worstHour: null,
+    };
+  }
 
-  const patterns = {
-    lossStreak: 0,
-    bestStrategy: null,
-    worstHour: null,
-  };
-
-  // LOSS STREAK
   let streak = 0;
   for (let t of trades) {
     if (calculatePnL(t) < 0) streak++;
     else break;
   }
-  patterns.lossStreak = streak;
 
-  // 📊 STRATEGY PERFORMANCE
   const stratMap = {};
   trades.forEach((t) => {
-    if (!stratMap[t.strategy]) stratMap[t.strategy] = 0;
-    stratMap[t.strategy] += calculatePnL(t);
+    if (!t.strategy) return;
+    stratMap[t.strategy] = (stratMap[t.strategy] || 0) + calculatePnL(t);
   });
 
-  patterns.bestStrategy = Object.keys(stratMap).sort(
-    (a, b) => stratMap[b] - stratMap[a],
-  )[0];
+  const bestStrategy =
+    Object.keys(stratMap).sort((a, b) => stratMap[b] - stratMap[a])[0] || null;
 
-  // ⏱ TIME ANALYSIS
   const hourMap = {};
   trades.forEach((t) => {
+    if (!t.date) return;
     const h = new Date(t.date).getHours();
-    if (!hourMap[h]) hourMap[h] = 0;
-    hourMap[h] += calculatePnL(t);
+    hourMap[h] = (hourMap[h] || 0) + calculatePnL(t);
   });
 
-  patterns.worstHour = Object.keys(hourMap).sort(
-    (a, b) => hourMap[a] - hourMap[b],
-  )[0];
+  const worstHour = Object.keys(hourMap).length
+    ? Object.keys(hourMap).sort((a, b) => hourMap[a] - hourMap[b])[0]
+    : null;
 
-  return patterns;
+  return {
+    lossStreak: streak,
+    bestStrategy,
+    worstHour,
+  };
 }

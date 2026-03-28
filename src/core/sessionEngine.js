@@ -1,9 +1,5 @@
 import { calculateSummary } from "../utils/calculations";
-import {
-  MAX_TRADES_PER_DAY,
-  DAILY_PROFIT_TARGET,
-  DAILY_LOSS_LIMIT,
-} from "./constants";
+import { LIMITS } from "../utils/constants";
 
 export function createSession(trades) {
   const today = new Date().toDateString();
@@ -14,15 +10,10 @@ export function createSession(trades) {
 
   const summary = calculateSummary(todayTrades);
 
-  const isLocked =
-    todayTrades.length >= MAX_TRADES_PER_DAY ||
-    summary.netPnL <= -DAILY_LOSS_LIMIT ||
-    summary.netPnL >= DAILY_PROFIT_TARGET;
-
   return {
     tradesToday: todayTrades.length,
     pnlToday: summary.netPnL,
-    isLocked,
+    history: trades,
     todayTrades,
     summary,
   };
