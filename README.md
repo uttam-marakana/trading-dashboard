@@ -136,48 +136,56 @@ Before execution, system shows:
 ```
 src/
 │
-├── core/              # 🧠 SYSTEM BRAIN
-│   ├── executionEngine.js
-│   ├── tradeValidator.js
-│   ├── riskManager.js
-│   ├── disciplineManager.js
-│   └── marketContext.js
+├── assets/            # Images, Custom Css & JS files
 │
-├── store/             # ⚙️ SESSION LAYER
+├── components/        # UI (NO LOGIC)
+│   ├── AdaptiveFeedback.jsx
+│   ├── Analytics.jsx
+│   ├── BehaviorWarnings.jsx
+│   ├── DisciplineGuard.jsx
+│   ├── DisciplineScore.jsx
+│   ├── EquityChart.jsx
+│   ├── Insights.jsx
+│   ├── PatternInsights.jsx
+│   ├── PreTradeInsights.jsx
+│   ├── RiskEngine.jsx
+│   ├── SummaryCard.jsx
+│   ├── ThemeToggle.jsx
+│   ├── TradeCalculator.jsx
+│   ├── TradeForm.jsx
+│   ├── TradeList.jsx
+│   └── WeeklyReport.jsx
+│
+├── context/
+│   └── ThemeContext.jsx
+│
+├── core/              # SYSTEM BRAIN
+│   ├── behaviorEngine.js
+│   ├── disciplineManager.js
+│   ├── executionEngine.js
+│   ├── marketContext.js
+│   ├── patternEngine.js
+│   ├── riskManager.js
+│   └── tradeValidator.js
+│
+├── hooks/
+│   └── useLocalStorage.js
+│
+├── store/             # SESSION LAYER
 │   ├── sessionStore.js
 │   └── tradeStore.js
 │
-├── components/        # 🎨 UI (NO LOGIC)
-│   ├── TradeForm.jsx
-│   ├── PreTradeInsights.jsx
-│   ├── TradeList.jsx
-│   ├── TradeCalculator.jsx
-│   ├── RiskEngine.jsx
-│   ├── DisciplineGuard.jsx
-│   ├── DisciplineScore.jsx
-│   ├── Analytics.jsx
-│   ├── Insights.jsx
-│   ├── EquityChart.jsx
-│   ├── SummaryCard.jsx
-│   └── ThemeToggle.jsx
-│
-├── utils/             # 🔧 CORE LOGIC
+├── utils/             # CORE LOGIC
+│   ├── .js
+│   ├── .js
 │   ├── calculations.js
 │   ├── analytics.js
 │   ├── constants.js
 │   ├── scoreEngine.js
 │   └── missedTrades.js
 │
-├── hooks/
-│   └── useLocalStorage.js
-│
-├── context/
-│   └── ThemeContext.jsx
-│
-├── styles/
-│   └── index.css
-│
 ├── App.jsx
+│── index.css
 ├── main.jsx
 ```
 
