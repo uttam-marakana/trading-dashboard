@@ -15,60 +15,60 @@ A professional-grade trading system built with **React + Vite**, designed to tra
 
 TradeOS enforces:
 
-* Discipline
-* Risk control
-* Behavioral awareness
-* Execution quality
+- Discipline
+- Risk control
+- Behavioral awareness
+- Execution quality
 
 ---
 
 # 🚀 Features
 
-## ✅ Core System
+##Core System
 
-* Trade logging (immutable history)
-* Real-time **Net PnL (after charges)**
-* Angel One brokerage calculation
-* Equity curve visualization
+- Trade logging (immutable history)
+- Real-time **Net PnL (after charges)**
+- Angel One brokerage calculation
+- Equity curve visualization
 
 ---
 
 ## 🧠 Decision Engine (Pre-Trade Layer)
 
-* Live trade evaluation (before execution)
-* Break-even move detection
-* Charges + net PnL preview
-* Risk/Reward calculation
-* ⚠ Real-time warnings
+- Live trade evaluation (before execution)
+- Break-even move detection
+- Charges + net PnL preview
+- Risk/Reward calculation
+- ⚠ Real-time warnings
 
 ---
 
 ## ⚠️ Risk Engine
 
-* Position sizing logic
-* Risk per trade calculation
-* Max risk enforcement (₹300)
+- Position sizing logic
+- Risk per trade calculation
+- Max risk enforcement (₹300)
 
 ---
 
-## 🔥 Execution Engine (Enforcement Layer)
+## Execution Engine (Enforcement Layer)
 
-* Validates every trade before execution
-* Blocks:
+- Validates every trade before execution
+- Blocks:
+  - High-risk trades
+  - Low-confidence trades
+  - Invalid setups
 
-  * High-risk trades
-  * Low-confidence trades
-  * Invalid setups
-* Central decision engine (ALLOW / BLOCK)
+- Central decision engine (ALLOW / BLOCK)
 
 ---
 
 ## 📊 Analytics Engine
 
-* Strategy performance tracking
-* Time-based performance analysis
-* Win rate, avg win/loss
-* Expectancy calculation
+- Strategy performance tracking
+- Time-based performance analysis
+- Win rate, avg win/loss
+- Expectancy calculation
 
 ---
 
@@ -76,21 +76,21 @@ TradeOS enforces:
 
 Detects:
 
-* Overtrading
-* Direction switching
-* Low win rate
-* Negative expectancy
-* Risk violations
-* Repeated mistakes
+- Overtrading
+- Direction switching
+- Low win rate
+- Negative expectancy
+- Risk violations
+- Repeated mistakes
 
 ---
 
 ## 🧘 Discipline System
 
-* Max 3 trades/day
-* Daily loss limit (₹600)
-* Profit target lock (₹1200)
-* Hard session lock enforcement
+- Max 3 trades/day
+- Daily loss limit (₹600)
+- Profit target lock (₹1200)
+- Hard session lock enforcement
 
 ---
 
@@ -98,11 +98,11 @@ Detects:
 
 ### 🎯 Discipline Score
 
-* Daily behavior quality (0–10)
+- Daily behavior quality (0–10)
 
 ### 📈 Trade Quality Score
 
-* Per-trade execution quality
+- Per-trade execution quality
 
 ---
 
@@ -110,11 +110,11 @@ Detects:
 
 Before execution, system shows:
 
-* Risk (₹)
-* R:R ratio
-* Net PnL (after charges)
-* Break-even move
-* ⚠ Warnings (bad trades)
+- Risk (₹)
+- R:R ratio
+- Net PnL (after charges)
+- Break-even move
+- ⚠ Warnings (bad trades)
 
 ---
 
@@ -220,18 +220,18 @@ yarn add formik uuid dayjs recharts
 
 5. Review:
 
-* Analytics
-* Insights
-* Discipline score
+- Analytics
+- Insights
+- Discipline score
 
 ---
 
 # 🔐 System Guarantees
 
-* No overtrading beyond limits
-* No high-risk trades
-* No invalid setups
-* No emotional execution bypass
+- No overtrading beyond limits
+- No high-risk trades
+- No invalid setups
+- No emotional execution bypass
 
 ---
 
@@ -239,13 +239,13 @@ yarn add formik uuid dayjs recharts
 
 Most tools:
 
-* Track trades ❌
+- Track trades ❌
 
 TradeOS:
 
-* Controls decisions ✅
-* Enforces discipline ✅
-* Prevents bad trades ✅
+- Controls decisions ✅
+- Enforces discipline ✅
+- Prevents bad trades ✅
 
 ---
 
@@ -260,11 +260,11 @@ TradeOS:
 
 # 📈 Future Roadmap
 
-* Behavior AI blocker
-* Broker API integration
-* Cloud sync (multi-device)
-* Multi-user SaaS system
-* Strategy backtesting
+- Behavior AI blocker
+- Broker API integration
+- Cloud sync (multi-device)
+- Multi-user SaaS system
+- Strategy backtesting
 
 ---
 
