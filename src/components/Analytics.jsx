@@ -2,14 +2,12 @@ import {
   getStrategyStats,
   getTimeStats,
   getPerformanceStats,
-  getAIInsights,
 } from "../utils/analytics";
 
 const Analytics = ({ trades }) => {
   const strategyStats = getStrategyStats(trades);
   const timeStats = getTimeStats(trades);
   const performance = getPerformanceStats(trades);
-  const insights = getAIInsights(trades);
 
   const sortedHours = Object.keys(timeStats).sort((a, b) => a - b);
 
@@ -23,12 +21,12 @@ const Analytics = ({ trades }) => {
 
       {/* Strategy */}
       {Object.keys(strategyStats).length > 0 && (
-        <div className="mb-3">
-          <strong>Strategy Performance</strong>
+        <div>
+          <strong>Strategy</strong>
           {Object.entries(strategyStats).map(([key, val]) => (
-            <div key={key} className="small d-flex justify-content-between">
+            <div key={key} className="flex justify-between small">
               <span>{key}</span>
-              <span className={val.pnl >= 0 ? "text-success" : "text-danger"}>
+              <span className={val.pnl >= 0 ? "text-profit" : "text-loss"}>
                 ₹{val.pnl.toFixed(2)}
               </span>
             </div>
@@ -38,14 +36,14 @@ const Analytics = ({ trades }) => {
 
       {/* Time */}
       {sortedHours.length > 0 && (
-        <div className="mb-3">
-          <strong>Time Performance</strong>
+        <div>
+          <strong>Time</strong>
           {sortedHours.map((key) => (
-            <div key={key} className="small d-flex justify-content-between">
+            <div key={key} className="flex justify-between small">
               <span>{key}:00</span>
               <span
                 className={
-                  timeStats[key].pnl >= 0 ? "text-success" : "text-danger"
+                  timeStats[key].pnl >= 0 ? "text-profit" : "text-loss"
                 }
               >
                 ₹{timeStats[key].pnl.toFixed(2)}
@@ -57,32 +55,23 @@ const Analytics = ({ trades }) => {
 
       {/* Performance */}
       {trades.length > 0 && (
-        <div className="mb-3">
+        <div>
           <strong>Performance</strong>
           <div className="small">
             Win Rate: {performance.winRate.toFixed(1)}%
           </div>
-          <div className="small text-success">
+          <div className="small text-profit">
             Avg Win: ₹{performance.avgWin.toFixed(2)}
           </div>
-          <div className="small text-danger">
+          <div className="small text-loss">
             Avg Loss: ₹{performance.avgLoss.toFixed(2)}
           </div>
-          <div className="small fw-bold">
+          <div className="small">
             Expectancy: ₹{performance.expectancy.toFixed(2)}
           </div>
+          <div className="small">Avg RR: {performance.avgRR.toFixed(2)}</div>
         </div>
       )}
-
-      {/* Insights */}
-      <div>
-        <strong>AI Insights</strong>
-        {insights.map((i, idx) => (
-          <div key={idx} className="small text-warning">
-            ⚠ {i}
-          </div>
-        ))}
-      </div>
     </div>
   );
 };

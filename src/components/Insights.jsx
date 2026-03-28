@@ -4,26 +4,22 @@ const Insights = ({ trades }) => {
   const insights = getAIInsights(trades);
 
   return (
-    <div className="card p-3 mb-3">
-      <h6>Insights</h6>
+    <div className="card p-3">
+      <h6>AI Insights</h6>
 
-      {/* EMPTY STATE */}
       {trades.length === 0 && (
         <div className="text-muted small">
           No trades yet. Start logging to generate insights.
         </div>
       )}
 
-      {/* ACTIVE STATE */}
       {trades.length > 0 && (
         <>
           {insights.length === 0 ? (
-            <div className="text-success small">
-              ✔ System stable — maintain discipline
-            </div>
+            <div className="text-profit small">✔ System stable</div>
           ) : (
             insights.map((i, idx) => (
-              <div key={idx} className="small text-warning mb-1">
+              <div key={idx} className="small text-warning">
                 ⚠ {i}
               </div>
             ))
