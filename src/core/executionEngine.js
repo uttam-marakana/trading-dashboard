@@ -2,6 +2,9 @@ import { calculateRisk } from "./riskManager";
 import { checkDiscipline } from "./disciplineManager";
 import { validateTrade } from "./tradeValidator";
 import { calculatePnL } from "../utils/calculations";
+import { behaviorEngine } from "./behaviorEngine";
+import { patternEngine } from "./patternEngine";
+
 
 export function executionEngine(trade, session) {
   // 1. Discipline
@@ -16,29 +19,47 @@ export function executionEngine(trade, session) {
     return { allowed: false, reason: validation.reason };
   }
 
-  // 3. Risk enforcement
-  const risk = calculateRisk(trade);
-  if (risk > 300) {
-    return { allowed: false, reason: "Risk exceeds ₹300" };
+  // 3. Behavior
+  const behavior = behaviorEngine(trade, session.history || []);
+  if (!behavior.allowed) {
+    return { allowed: false, reason: behavior.reason };
   }
 
-  // 4. Optional behavior enforcement (NEW EDGE)
+  // 4. Adaptive blocking
+  const patterns = patternEngine(session.history || []);
+  if (patterns.lossStreak >= 2) {
+    return { allowed: false, reason: "System cooldown (loss streak)" };
+  }
+
+  if (trade.strategy === patterns.worstHour) {
+    return { allowed: false, reason: "Avoid this time pattern" };
+  }
+
+  // 5. Risk enforcement
+  const risk = calculateRisk(trade);
+  if (risk > 600) {
+    return { allowed: false, reason: "Risk exceeds ₹600" };
+  }
+
+  // 6. Optional behavior enforcement
   if (trade.confidence <= 2) {
     return { allowed: false, reason: "Low confidence trade blocked" };
   }
 
-  // 5. PnL
+  // 7. PnL
   const pnl = calculatePnL(trade);
 
-  // 6. Final trade
+  // 8. Final trade
   return {
     allowed: true,
+    warnings: behavior.warnings || [],
     trade: {
       ...trade,
       pnl,
       risk,
       timestamp: Date.now(),
       followedRules: true,
+      patternTag: patterns.bestStrategy || null,
     },
   };
 }
