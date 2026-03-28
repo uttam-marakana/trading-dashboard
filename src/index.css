@@ -1,60 +1,76 @@
-/* =========================
-   🎨 THEME VARIABLES
-========================= */
+/* ----- 1. DESIGN TOKENS -------------------- */
 
-/* DARK (DEFAULT) */
 :root {
+  /* COLORS */
   --bg: #020617;
   --bg-gradient: radial-gradient(circle at top, #1e293b, #020617);
 
-  --card-bg: rgba(255, 255, 255, 0.05);
-  --card-hover: rgba(255, 255, 255, 0.08);
+  --surface-1: rgba(255, 255, 255, 0.04);
+  --surface-2: rgba(255, 255, 255, 0.06);
+  --surface-hover: rgba(255, 255, 255, 0.08);
 
-  --border: rgba(255, 255, 255, 0.1);
+  --border: rgba(255, 255, 255, 0.08);
 
-  --text: #cbd5f5;
-  --text-strong: #ffffff;
+  --text-primary: #fff;
+  --text-secondary: #cbd5f5;
+  --text-muted: #94a3b8;
 
   --profit: #22c55e;
   --loss: #ef4444;
   --warning: #f59e0b;
-
   --accent: #a855f7;
+
+  /* SPACING */
+  --space-1: 8px;
+  --space-2: 12px;
+  --space-3: 16px;
+  --space-4: 24px;
+
+  /* TYPOGRAPHY */
+  --font-sm: 12px;
+  --font-md: 14px;
+  --font-lg: 18px;
+  --font-xl: 24px;
+
+  /* UI */
+  --radius: 14px;
+  --blur: blur(8px);
+
+  /* TRANSITION (FIXED) */
+  --transition:
+    background 0.25s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 /* LIGHT MODE */
+
 [data-theme="light"] {
   --bg: #f4f6fb;
   --bg-gradient: linear-gradient(to bottom, #ffffff, #eaeef6);
 
-  --card-bg: rgba(255, 255, 255, 0.85);
-  --card-hover: rgba(255, 255, 255, 1);
+  --surface-1: rgba(255, 255, 255, 0.9);
+  --surface-2: #ffffff;
+  --surface-hover: #ffffff;
 
   --border: rgba(0, 0, 0, 0.08);
 
-  --text: #1a1a1a;
-  --text-strong: #000000;
-
-  --profit: #16a34a;
-  --loss: #dc2626;
-  --warning: #d97706;
+  --text-primary: #000;
+  --text-secondary: #1a1a1a;
+  --text-muted: #6b7280;
 
   --accent: #7c3aed;
 }
 
-/* =========================
-   🌍 GLOBAL
-========================= */
+/* ----- 2. BASE -------------------- */
 
 body {
   margin: 0;
   background: var(--bg-gradient);
-  color: var(--text);
+  color: var(--text-secondary);
   font-family:
     system-ui,
     -apple-system,
     sans-serif;
-  transition: all 0.3s ease;
+  transition: var(--transition);
 }
 
 h1,
@@ -62,185 +78,181 @@ h2,
 h3,
 h4,
 h5 {
-  color: var(--text-strong);
+  color: var(--text-primary);
 }
 
-/* =========================
-   💎 GLASS CARD SYSTEM
-========================= */
+/* ----- 3. UTILITIES -------------------- */
 
-.card,
-.glass-card {
-  background: var(--card-bg);
-  backdrop-filter: blur(16px);
+.flex {
+  display: flex;
+}
+.flex-col {
+  flex-direction: column;
+}
+
+.gap-2 {
+  gap: var(--space-2);
+}
+.gap-3 {
+  gap: var(--space-3);
+}
+
+.p-2 {
+  padding: var(--space-2);
+}
+.p-3 {
+  padding: var(--space-3);
+}
+
+.text-profit {
+  color: var(--profit);
+}
+.text-loss {
+  color: var(--loss);
+}
+.text-warning {
+  color: var(--warning);
+}
+
+.blocked {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* ----- 4. CARD SYSTEM -------------------- */
+
+.card {
+  background: var(--surface-2);
+  backdrop-filter: var(--blur);
   border: 1px solid var(--border);
-  border-radius: 16px;
-  transition: all 0.25s ease;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  border-radius: var(--radius);
+  padding: var(--space-3);
+  transition: var(--transition);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
 }
 
-/* 🔥 PREMIUM HOVER */
 .card:hover {
-  background: var(--card-hover);
+  background: var(--surface-hover);
   transform: translateY(-2px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
 }
 
-/* =========================
-   🎯 FORM ELEMENTS
-========================= */
+[data-theme="light"] .card {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* ----- 5. INPUT SYSTEM -------------------- */
 
 input,
-select {
-  background: rgba(255, 255, 255, 0.05) !important;
-  border: 1px solid var(--border) !important;
-  color: var(--text-strong) !important;
-  border-radius: 10px !important;
+select,
+.form-control {
+  width: 100%;
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  border-radius: 10px;
   padding: 10px;
-  transition: all 0.2s ease;
 }
 
-/* LIGHT INPUT */
-[data-theme="light"] input,
-[data-theme="light"] select {
-  background: rgba(0, 0, 0, 0.03) !important;
-}
-
-/* 🔥 FOCUS STATE (VERY IMPORTANT UX) */
 input:focus,
 select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.25);
   outline: none;
-  border-color: var(--accent) !important;
-  box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.3);
 }
 
-/* =========================
-   🚀 BUTTONS
-========================= */
+/* ----- 6. BUTTON SYSTEM -------------------- */
+
+.btn {
+  padding: 10px 14px;
+  border-radius: var(--radius);
+  border: none;
+  cursor: pointer;
+  transition: var(--transition);
+}
 
 .btn-primary {
   background: linear-gradient(135deg, #7c3aed, #a855f7);
-  border: none;
-  border-radius: 10px;
-  font-weight: 600;
-  transition: all 0.2s ease;
+  color: #fff;
 }
 
-.btn-primary:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
+.btn:active {
+  transform: scale(0.96);
 }
 
-/* =========================
-   📊 TRADE ITEMS
-========================= */
+/* ----- 7. TRADE STATES -------------------- */
 
-.trade-item {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  transition: all 0.2s ease;
-  padding: 10px;
+.trade-allowed {
+  border-left: 4px solid var(--profit);
 }
 
-.trade-item:hover {
-  transform: translateY(-2px);
-  background: rgba(255, 255, 255, 0.08);
+.trade-blocked {
+  border-left: 4px solid var(--loss);
 }
 
-/* =========================
-   💰 PnL COLORS
-========================= */
+/* OPTIONAL INTENSITY */
 
-.pnl {
-  font-size: 18px;
-  font-weight: bold;
+.profit-strong {
+  color: #16a34a;
+}
+.loss-strong {
+  color: #dc2626;
 }
 
-.text-success {
-  color: var(--profit) !important;
+/* ----- 8. FEEDBACK ANIMATIONS -------------------- */
+
+.flash-profit {
+  animation: flashGreen 0.5s ease;
 }
 
-.text-danger {
-  color: var(--loss) !important;
+@keyframes flashGreen {
+  from {
+    background: rgba(34, 197, 94, 0.2);
+  }
+  to {
+    background: transparent;
+  }
 }
 
-.text-warning {
-  color: var(--warning) !important;
-}
-
-/* =========================
-   🎛 THEME TOGGLE
-========================= */
-
-.theme-toggle {
-  border: 1px solid var(--border);
-  background: var(--card-bg);
-  color: var(--text);
-  padding: 6px 12px;
-  border-radius: 8px;
-  cursor: pointer;
-  backdrop-filter: blur(10px);
-  transition: all 0.2s ease;
-}
-
-.theme-toggle:hover {
-  background: var(--card-hover);
-}
-
-/* =========================
-   🧱 LAYOUT HELPERS
-========================= */
+/* ----- 9. LAYOUT SYSTEM -------------------- */
 
 .app-container {
   min-height: 100vh;
-  padding: 10px;
+  padding: var(--space-2);
 }
 
-/* =========================
-   🖱 SCROLLBAR (PRO FEEL)
-========================= */
-
-::-webkit-scrollbar {
-  width: 6px;
+.grid-layout {
+  display: grid;
+  grid-template-columns: minmax(260px, 320px) 1fr;
+  gap: var(--space-3);
 }
 
-::-webkit-scrollbar-thumb {
-  background: var(--accent);
-  border-radius: 10px;
+.grid-sub {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
 }
 
-/* =========================
-   📱 RESPONSIVE
-========================= */
+.left-panel,
+.right-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* ----- 10. RESPONSIVE -------------------- */
 
 @media (max-width: 1024px) {
-  .card {
-    padding: 14px !important;
+  .grid-layout {
+    grid-template-columns: 1fr;
   }
 }
 
 @media (max-width: 768px) {
+  .grid-sub {
+    grid-template-columns: 1fr;
+  }
+
   .card {
-    padding: 12px !important;
-  }
-
-  h5 {
-    font-size: 16px;
-  }
-
-  .pnl {
-    font-size: 16px;
-  }
-}
-
-@media (max-width: 480px) {
-  .card {
-    border-radius: 12px;
-  }
-
-  input,
-  select {
-    font-size: 14px;
+    padding: var(--space-2);
   }
 }
