@@ -1,5 +1,5 @@
 /* =========================
-   THEME VARIABLES
+   🎨 THEME VARIABLES
 ========================= */
 
 /* DARK (DEFAULT) */
@@ -8,6 +8,8 @@
   --bg-gradient: radial-gradient(circle at top, #1e293b, #020617);
 
   --card-bg: rgba(255, 255, 255, 0.05);
+  --card-hover: rgba(255, 255, 255, 0.08);
+
   --border: rgba(255, 255, 255, 0.1);
 
   --text: #cbd5f5;
@@ -15,6 +17,7 @@
 
   --profit: #22c55e;
   --loss: #ef4444;
+  --warning: #f59e0b;
 
   --accent: #a855f7;
 }
@@ -24,7 +27,9 @@
   --bg: #f4f6fb;
   --bg-gradient: linear-gradient(to bottom, #ffffff, #eaeef6);
 
-  --card-bg: rgba(255, 255, 255, 0.8);
+  --card-bg: rgba(255, 255, 255, 0.85);
+  --card-hover: rgba(255, 255, 255, 1);
+
   --border: rgba(0, 0, 0, 0.08);
 
   --text: #1a1a1a;
@@ -32,28 +37,36 @@
 
   --profit: #16a34a;
   --loss: #dc2626;
+  --warning: #d97706;
 
   --accent: #7c3aed;
 }
 
 /* =========================
-   GLOBAL
+   🌍 GLOBAL
 ========================= */
 
 body {
   margin: 0;
   background: var(--bg-gradient);
   color: var(--text);
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif;
   transition: all 0.3s ease;
 }
 
-h1, h2, h3, h4, h5 {
+h1,
+h2,
+h3,
+h4,
+h5 {
   color: var(--text-strong);
 }
 
 /* =========================
-   GLASS CARD SYSTEM
+   💎 GLASS CARD SYSTEM
 ========================= */
 
 .card,
@@ -62,11 +75,19 @@ h1, h2, h3, h4, h5 {
   backdrop-filter: blur(16px);
   border: 1px solid var(--border);
   border-radius: 16px;
+  transition: all 0.25s ease;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
 }
 
+/* 🔥 PREMIUM HOVER */
+.card:hover {
+  background: var(--card-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+}
+
 /* =========================
-   FORM ELEMENTS
+   🎯 FORM ELEMENTS
 ========================= */
 
 input,
@@ -76,29 +97,42 @@ select {
   color: var(--text-strong) !important;
   border-radius: 10px !important;
   padding: 10px;
+  transition: all 0.2s ease;
 }
 
+/* LIGHT INPUT */
 [data-theme="light"] input,
 [data-theme="light"] select {
   background: rgba(0, 0, 0, 0.03) !important;
 }
 
+/* 🔥 FOCUS STATE (VERY IMPORTANT UX) */
+input:focus,
+select:focus {
+  outline: none;
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.3);
+}
+
 /* =========================
-   BUTTONS
+   🚀 BUTTONS
 ========================= */
 
 .btn-primary {
   background: linear-gradient(135deg, #7c3aed, #a855f7);
   border: none;
   border-radius: 10px;
+  font-weight: 600;
+  transition: all 0.2s ease;
 }
 
 .btn-primary:hover {
   opacity: 0.9;
+  transform: translateY(-1px);
 }
 
 /* =========================
-   TRADE ITEMS
+   📊 TRADE ITEMS
 ========================= */
 
 .trade-item {
@@ -106,14 +140,16 @@ select {
   border: 1px solid var(--border);
   border-radius: 10px;
   transition: all 0.2s ease;
+  padding: 10px;
 }
 
 .trade-item:hover {
   transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 /* =========================
-   PnL COLORS
+   💰 PnL COLORS
 ========================= */
 
 .pnl {
@@ -129,8 +165,12 @@ select {
   color: var(--loss) !important;
 }
 
+.text-warning {
+  color: var(--warning) !important;
+}
+
 /* =========================
-   THEME TOGGLE
+   🎛 THEME TOGGLE
 ========================= */
 
 .theme-toggle {
@@ -141,18 +181,24 @@ select {
   border-radius: 8px;
   cursor: pointer;
   backdrop-filter: blur(10px);
+  transition: all 0.2s ease;
+}
+
+.theme-toggle:hover {
+  background: var(--card-hover);
 }
 
 /* =========================
-   LAYOUT HELPERS
+   🧱 LAYOUT HELPERS
 ========================= */
 
 .app-container {
   min-height: 100vh;
+  padding: 10px;
 }
 
 /* =========================
-   SCROLLBAR (PRO FEEL)
+   🖱 SCROLLBAR (PRO FEEL)
 ========================= */
 
 ::-webkit-scrollbar {
@@ -165,7 +211,7 @@ select {
 }
 
 /* =========================
-   RESPONSIVE
+   📱 RESPONSIVE
 ========================= */
 
 @media (max-width: 1024px) {
