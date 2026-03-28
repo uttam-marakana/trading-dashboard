@@ -4,6 +4,7 @@ import { validateTrade } from "./tradeValidator";
 import { calculatePnL } from "../utils/calculations";
 import { behaviorEngine } from "./behaviorEngine";
 import { patternEngine } from "./patternEngine";
+import { LIMITS } from "../utils/constants";
 
 export function executionEngine(trade, session) {
   // 1. Discipline
@@ -24,24 +25,26 @@ export function executionEngine(trade, session) {
     return { allowed: false, reason: behavior.reason };
   }
 
-  // 4. Pattern control
+  // 4. Pattern
   const patterns = patternEngine(session.history || []);
 
   if (patterns.lossStreak >= 2) {
     return { allowed: false, reason: "Cooldown: loss streak" };
   }
 
-  if (patterns.worstHour && trade.hour === patterns.worstHour) {
+  const tradeHour = new Date(trade.date || Date.now()).getHours();
+
+  if (patterns.worstHour !== null && tradeHour == patterns.worstHour) {
     return { allowed: false, reason: "Avoid this trading hour" };
   }
 
   // 5. Risk
   const risk = calculateRisk(trade);
-  if (risk > 600) {
-    return { allowed: false, reason: "Risk > ₹600" };
+  if (risk > LIMITS.MAX_RISK) {
+    return { allowed: false, reason: "Risk exceeds limit" };
   }
 
-  // 6. Confidence
+  // 6. Confidence (FINAL AUTHORITY)
   if (trade.confidence <= 2) {
     return { allowed: false, reason: "Low confidence trade" };
   }

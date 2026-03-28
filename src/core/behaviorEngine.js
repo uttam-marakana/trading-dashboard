@@ -3,7 +3,6 @@ import { calculatePnL } from "../utils/calculations";
 export function behaviorEngine(trade, trades = []) {
   const warnings = [];
 
-  // Revenge trading (last 2 losses)
   const last2 = trades.slice(0, 2);
   const lossStreak = last2.filter((t) => calculatePnL(t) < 0);
 
@@ -11,12 +10,11 @@ export function behaviorEngine(trade, trades = []) {
     return { allowed: false, reason: "Revenge trading detected" };
   }
 
-  // ⚠ Low confidence
+  // Only warning (NOT blocking here)
   if (trade.confidence <= 2) {
     warnings.push("Low confidence trade");
   }
 
-  // Repeated mistakes
   const recentMistakes = trades
     .slice(0, 5)
     .filter((t) => t.mistake && t.mistake !== "None");
