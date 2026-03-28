@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 import ThemeToggle from "./components/ThemeToggle";
 
@@ -15,11 +16,12 @@ import PatternInsights from "./components/PatternInsights";
 import AdaptiveFeedback from "./components/AdaptiveFeedback";
 
 import { calculateSummary } from "./utils/calculations";
+import { executionEngine } from "./core/executionEngine";
 
 function App() {
   const [trades, setTrades] = useLocalStorage("trades", []);
+  const [flash, setFlash] = useState(null);
 
-  // FILTER TODAY TRADES (CRITICAL FIX)
   const today = new Date().toDateString();
 
   const todayTrades = trades.filter(
@@ -39,19 +41,23 @@ function App() {
   };
 
   const addTrade = (trade) => {
-    if (session.isLocked) {
-      alert("🚫 You’re DONE for the day. Walk away.");
+    const result = executionEngine(trade, session);
+
+    if (!result.allowed) {
+      alert(`🚫 ${result.reason}`);
       return;
     }
 
-    setTrades((prev) => [trade, ...prev]);
+    setTrades((prev) => [result.trade, ...prev]);
+
+    setFlash(result.trade.pnl >= 0 ? "profit" : "loss");
+    setTimeout(() => setFlash(null), 600);
   };
 
   return (
-    <div className="app-container">
+    <div className={`app-container ${flash ? `flash-${flash}` : ""}`}>
       <div className="container-fluid py-3">
-        {/* HEADER */}
-        <div className="d-flex justify-content-between align-items-center mb-3">
+        <div className="d-flex justify-content-between border-bottom align-items-center pb-2 mb-3">
           <h5 className="mb-0">📊 Execution OS</h5>
           <ThemeToggle />
         </div>
@@ -60,19 +66,22 @@ function App() {
           {/* LEFT */}
           <div className="col-12 col-lg-4">
             <div className="d-flex flex-column gap-3">
-              <RiskEngine />
-              <TradeCalculator />
+              <div className="card">
+                <h6>Decision</h6>
+                <TradeCalculator />
+                <RiskEngine />
+              </div>
 
-              <TradeForm addTrade={addTrade} session={session} />
+              <div className="card">
+                <h6>Execution</h6>
+                <TradeForm addTrade={addTrade} session={session} />
+              </div>
 
               <DisciplineScore trades={todayTrades} />
-
               <DisciplineGuard trades={todayTrades} />
 
               <Insights trades={trades} />
-
               <PatternInsights trades={trades} />
-
               <AdaptiveFeedback trades={trades} />
             </div>
           </div>
@@ -86,7 +95,6 @@ function App() {
                 <div className="col-12 col-md-6">
                   <EquityChart trades={trades} />
                 </div>
-
                 <div className="col-12 col-md-6">
                   <Analytics trades={trades} />
                 </div>
