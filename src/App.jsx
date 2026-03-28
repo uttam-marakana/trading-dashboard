@@ -5,12 +5,12 @@ import ThemeToggle from "./components/ThemeToggle";
 import TradeForm from "./components/TradeForm";
 import SummaryCard from "./components/SummaryCard";
 import TradeList from "./components/TradeList";
-import DisciplineGuard from "./components/DisciplineGuard";
 import EquityChart from "./components/EquityChart";
 import Insights from "./components/Insights";
 import TradeCalculator from "./components/TradeCalculator";
 import RiskEngine from "./components/RiskEngine";
 import Analytics from "./components/Analytics";
+import DisciplineGuard from "./components/DisciplineGuard";
 import DisciplineScore from "./components/DisciplineScore";
 import PatternInsights from "./components/PatternInsights";
 import AdaptiveFeedback from "./components/AdaptiveFeedback";
@@ -30,13 +30,10 @@ function App() {
 
   const summary = calculateSummary(todayTrades);
 
+  // SESSION (DATA ONLY)
   const session = {
     tradesToday: todayTrades.length,
     pnlToday: summary.netPnL,
-    isLocked:
-      todayTrades.length >= 3 ||
-      summary.isLossLimitHit ||
-      summary.netPnL >= 1500,
     history: trades,
   };
 
@@ -45,18 +42,21 @@ function App() {
 
     if (!result.allowed) {
       alert(`🚫 ${result.reason}`);
-      return;
+      return result; // 🔥 return for UI handling
     }
 
     setTrades((prev) => [result.trade, ...prev]);
 
     setFlash(result.trade.pnl >= 0 ? "profit" : "loss");
     setTimeout(() => setFlash(null), 600);
+
+    return result; // 🔥 return success + warnings
   };
 
   return (
     <div className={`app-container ${flash ? `flash-${flash}` : ""}`}>
       <div className="container-fluid py-3">
+        {/* HEADER */}
         <div className="d-flex justify-content-between border-bottom align-items-center pb-2 mb-3">
           <h5 className="mb-0">📊 Execution OS</h5>
           <ThemeToggle />
@@ -78,7 +78,7 @@ function App() {
               </div>
 
               <DisciplineScore trades={todayTrades} />
-              <DisciplineGuard trades={todayTrades} />
+              <DisciplineGuard trades={todayTrades} session={session} />
 
               <Insights trades={trades} />
               <PatternInsights trades={trades} />
