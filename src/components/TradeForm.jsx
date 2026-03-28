@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { v4 as uuidv4 } from "uuid";
-import { executionEngine } from "../core/executionEngine";
 import PreTradeInsights from "./PreTradeInsights";
 import BehaviorWarnings from "./BehaviorWarnings";
 
@@ -29,13 +28,30 @@ const TradeForm = ({ addTrade, session }) => {
       validate={(values) => {
         const errors = {};
 
-        if (!values.entry) errors.entry = "Required";
-        if (!values.exit) errors.exit = "Required";
-        if (!values.sl) errors.sl = "Required";
+        const entry = Number(values.entry);
+        const exit = Number(values.exit);
+        const sl = Number(values.sl);
 
-        if (Number(values.entry) <= 0) errors.entry = "Invalid entry";
-        if (Number(values.exit) <= 0) errors.exit = "Invalid exit";
+        if (!entry) errors.entry = "Required";
+        if (!exit) errors.exit = "Required";
+        if (!sl) errors.sl = "Required";
+
+        if (entry <= 0) errors.entry = "Invalid entry";
+        if (exit <= 0) errors.exit = "Invalid exit";
         if (Number(values.qty) <= 0) errors.qty = "Invalid qty";
+
+        // 🔥 LOGIC VALIDATION
+        if (entry && sl && entry === sl) {
+          errors.sl = "SL cannot equal entry";
+        }
+
+        if (values.type === "CE" && sl >= entry) {
+          errors.sl = "SL must be below entry (CE)";
+        }
+
+        if (values.type === "PE" && sl <= entry) {
+          errors.sl = "SL must be above entry (PE)";
+        }
 
         if (Number(values.confidence) < 1 || Number(values.confidence) > 5) {
           errors.confidence = "1–5 only";
@@ -55,21 +71,21 @@ const TradeForm = ({ addTrade, session }) => {
           date: new Date(),
         };
 
-        const result = executionEngine(tradeData, session);
+        // 🚀 Only pass to App (single authority)
+        const result = addTrade(tradeData);
 
-        if (!result.allowed) {
-          alert(`🚫Blocked: ${result.reason}`);
-          return;
+        // Handle warnings if returned
+        if (result?.warnings) {
+          setWarnings(result.warnings);
         }
 
-        setWarnings(result.warnings || []);
-
-        addTrade(result.trade);
-        resetForm();
+        if (result?.allowed) {
+          resetForm();
+        }
       }}
     >
       {({ values }) => (
-        <Form className="card p-3 mb-3">
+        <Form className={`card ${session.isLocked ? "blocked" : ""}`}>
           <h6>Add Trade</h6>
 
           <div className="row g-2">
@@ -99,8 +115,8 @@ const TradeForm = ({ addTrade, session }) => {
             <div className="col-6">
               <Field
                 name="entry"
-                placeholder="Entry"
                 type="number"
+                placeholder="Entry"
                 className="form-control"
               />
               <ErrorMessage
@@ -113,8 +129,8 @@ const TradeForm = ({ addTrade, session }) => {
             <div className="col-6">
               <Field
                 name="exit"
-                placeholder="Exit"
                 type="number"
+                placeholder="Exit"
                 className="form-control"
               />
               <ErrorMessage
@@ -125,17 +141,26 @@ const TradeForm = ({ addTrade, session }) => {
             </div>
 
             <div className="col-6">
-              <Field name="sl" type="number" className="form-control" />
+              <Field
+                name="sl"
+                type="number"
+                placeholder="SL"
+                className="form-control"
+              />
               <ErrorMessage
                 name="sl"
-                placeholder="Stop Loss"
                 component="div"
                 className="text-danger small"
               />
             </div>
 
             <div className="col-6">
-              <Field name="qty" type="number" className="form-control" />
+              <Field
+                name="qty"
+                type="number"
+                placeholder="Qty"
+                className="form-control"
+              />
               <ErrorMessage
                 name="qty"
                 component="div"
@@ -168,14 +193,15 @@ const TradeForm = ({ addTrade, session }) => {
               />
             </div>
 
-            {/* PRE-TRADE INTELLIGENCE */}
             <PreTradeInsights values={values} />
-
-            {/*Behavior warnings UI */}
             <BehaviorWarnings warnings={warnings} />
 
-            <button className="btn btn-primary w-100 mt-2">
-              Execute Trade
+            <button
+              type="submit"
+              className="btn btn-primary w-100"
+              disabled={session.isLocked}
+            >
+              {session.isLocked ? "Session Locked" : "Execute Trade"}
             </button>
           </div>
         </Form>
