@@ -136,57 +136,56 @@ Before execution, system shows:
 ```
 src/
 │
-├── assets/            # Images, Custom Css & JS files
+├── assets/                        # 🎨 Static assets (icons, styles, images)
 │
-├── components/        # UI (NO LOGIC)
-│   ├── AdaptiveFeedback.jsx
-│   ├── Analytics.jsx
-│   ├── BehaviorWarnings.jsx
-│   ├── DisciplineGuard.jsx
-│   ├── DisciplineScore.jsx
-│   ├── EquityChart.jsx
-│   ├── Insights.jsx
-│   ├── PatternInsights.jsx
-│   ├── PreTradeInsights.jsx
-│   ├── RiskEngine.jsx
-│   ├── SummaryCard.jsx
-│   ├── ThemeToggle.jsx
-│   ├── TradeCalculator.jsx
-│   ├── TradeForm.jsx
-│   ├── TradeList.jsx
-│   └── WeeklyReport.jsx
+├── components/                    # 🎯 UI LAYER (NO BUSINESS LOGIC)
+│   ├── AdaptiveFeedback.jsx         # AI adaptive rules display
+│   ├── Analytics.jsx                # Strategy + time + performance stats
+│   ├── BehaviorWarnings.jsx         # Behavior alerts (pre-trade)
+│   ├── DisciplineGuard.jsx          # Rule violations display
+│   ├── DisciplineScore.jsx          # Daily discipline score
+│   ├── EquityChart.jsx              # Equity curve visualization
+│   ├── Insights.jsx                 # AI behavioral insights
+│   ├── PatternInsights.jsx          # Pattern detection UI
+│   ├── PreTradeInsights.jsx         # Pre-trade intelligence (risk, RR, BE)
+│   ├── RiskEngine.jsx               # Risk preview (UI only)
+│   ├── SummaryCard.jsx              # Net PnL + capital overview
+│   ├── ThemeToggle.jsx              # Light/Dark toggle
+│   ├── TradeCalculator.jsx          # Trade viability checker
+│   ├── TradeForm.jsx                # Trade execution entry
+│   ├── TradeList.jsx                # Trade history display
+│   └── WeeklyReport.jsx             # (Future) weekly analytics
 │
-├── context/
-│   └── ThemeContext.jsx
+├── context/                       # 🌗 UI STATE
+│   └── ThemeContext.jsx             # Theme management
 │
-├── core/              # SYSTEM BRAIN
-│   ├── behaviorEngine.js
-│   ├── disciplineManager.js
-│   ├── executionEngine.js
-│   ├── marketContext.js
-│   ├── patternEngine.js
-│   ├── riskManager.js
-│   └── tradeValidator.js
+├── core/                          # 🧠 SYSTEM BRAIN (ENFORCEMENT LAYER)
+│   ├── behaviorEngine.js            # Detects revenge, mistakes, patterns
+│   ├── disciplineManager.js         # Daily rules (lock, limits)
+│   ├── executionEngine.js           # MAIN decision engine (ALLOW / BLOCK)
+│   ├── marketContext.js             # (Future) market condition logic
+│   ├── patternEngine.js             # Pattern recognition (streaks, timing)
+│   ├── riskManager.js               # Risk calculation + validation
+│   └── tradeValidator.js            # Input validation layer
 │
-├── hooks/
-│   └── useLocalStorage.js
+├── hooks/                         # ⚛️ REUSABLE LOGIC
+│   └── useLocalStorage.js           # Persistent storage
 │
-├── store/             # SESSION LAYER
-│   ├── sessionStore.js
-│   └── tradeStore.js
+├── store/                         # ⚙️ SESSION MANAGEMENT
+│   ├── sessionStore.js              # Session abstraction (today state)
+│   └── tradeStore.js                # Trade helpers (CRUD logic)
 │
-├── utils/             # CORE LOGIC
-│   ├── .js
-│   ├── .js
-│   ├── calculations.js
-│   ├── analytics.js
-│   ├── constants.js
-│   ├── scoreEngine.js
-│   └── missedTrades.js
+├── utils/                         # 🔧 PURE LOGIC (SHARED)
+│   ├── adaptiveRules.js             # AI adaptive rules
+│   ├── analytics.js                 # Stats + insights engine
+│   ├── calculations.js              # PnL, charges, summary
+│   ├── constants.js                 # System limits (risk, trades)
+│   ├── missedTrades.js              # Behavior tracking (future)
+│   └── scoreEngine.js               # Discipline + trade scoring
 │
-├── App.jsx
-│── index.css
-├── main.jsx
+├── App.jsx                        # 🔗 ROOT SYSTEM COMPOSITION
+├── main.jsx                       # Entry point
+└── index.css                      #Global UI system (theme, glass, animations)
 ```
 
 ---
