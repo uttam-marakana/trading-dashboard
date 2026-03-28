@@ -5,7 +5,6 @@ import { calculatePnL } from "../utils/calculations";
 import { behaviorEngine } from "./behaviorEngine";
 import { patternEngine } from "./patternEngine";
 
-
 export function executionEngine(trade, session) {
   // 1. Discipline
   const discipline = checkDiscipline(session);
@@ -25,31 +24,31 @@ export function executionEngine(trade, session) {
     return { allowed: false, reason: behavior.reason };
   }
 
-  // 4. Adaptive blocking
+  // 4. Pattern control
   const patterns = patternEngine(session.history || []);
+
   if (patterns.lossStreak >= 2) {
-    return { allowed: false, reason: "System cooldown (loss streak)" };
+    return { allowed: false, reason: "Cooldown: loss streak" };
   }
 
-  if (trade.strategy === patterns.worstHour) {
-    return { allowed: false, reason: "Avoid this time pattern" };
+  if (patterns.worstHour && trade.hour === patterns.worstHour) {
+    return { allowed: false, reason: "Avoid this trading hour" };
   }
 
-  // 5. Risk enforcement
+  // 5. Risk
   const risk = calculateRisk(trade);
   if (risk > 600) {
-    return { allowed: false, reason: "Risk exceeds ₹600" };
+    return { allowed: false, reason: "Risk > ₹600" };
   }
 
-  // 6. Optional behavior enforcement
+  // 6. Confidence
   if (trade.confidence <= 2) {
-    return { allowed: false, reason: "Low confidence trade blocked" };
+    return { allowed: false, reason: "Low confidence trade" };
   }
 
   // 7. PnL
   const pnl = calculatePnL(trade);
 
-  // 8. Final trade
   return {
     allowed: true,
     warnings: behavior.warnings || [],
