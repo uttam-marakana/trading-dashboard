@@ -1,6 +1,10 @@
-import { calculateCharges } from "../utils/calculations";
-
-const LOT_SIZE = 65;
+import {
+  calculateCharges,
+  calculatePnL,
+  calculateNetPnL,
+  calculateRR,
+} from "../utils/calculations";
+import { LIMITS } from "../utils/constants";
 
 const PreTradeInsights = ({ values }) => {
   const entry = Number(values.entry || 0);
@@ -10,25 +14,37 @@ const PreTradeInsights = ({ values }) => {
 
   if (!entry || !exit || !sl) return null;
 
-  const pnl = (exit - entry) * LOT_SIZE * qty;
-  const charges = calculateCharges({ entry, exit });
-  const net = pnl - charges;
+  const trade = { entry, exit, sl, qty };
 
-  const risk = Math.abs(entry - sl) * LOT_SIZE * qty;
-  const reward = Math.abs(exit - entry) * LOT_SIZE * qty;
+  const pnl = calculatePnL(trade);
+  const charges = calculateCharges(trade);
+  const net = calculateNetPnL(trade);
 
-  const rr = risk ? (reward / risk).toFixed(2) : 0;
-  const breakeven = charges / (LOT_SIZE * qty);
+  const risk = Math.abs(entry - sl) * LIMITS.LOT_SIZE * qty;
+  const rr = calculateRR(trade);
+
+  const breakeven = charges / (LIMITS.LOT_SIZE * qty);
 
   const warnings = [];
 
-  if (risk > 300) warnings.push("High risk (> ₹300)");
-  if (rr < 1.2) warnings.push("Low R:R ratio");
-  if (breakeven > 5) warnings.push("High break-even move");
-  if (net < 0) warnings.push("Trade not profitable after charges");
+  if (risk > LIMITS.MAX_RISK) {
+    warnings.push(`High risk (> ₹${LIMITS.MAX_RISK})`);
+  }
+
+  if (rr < 1.2) {
+    warnings.push("Low R:R ratio");
+  }
+
+  if (breakeven > 5) {
+    warnings.push("High break-even move");
+  }
+
+  if (net < 0) {
+    warnings.push("Not profitable after charges");
+  }
 
   return (
-    <div className="card p-2 mt-2">
+    <div className="card p-2">
       <div className="small">
         <div>Risk: ₹{risk.toFixed(2)}</div>
         <div>R:R: {rr}</div>
@@ -37,7 +53,7 @@ const PreTradeInsights = ({ values }) => {
       </div>
 
       {warnings.length > 0 && (
-        <div className="mt-2 text-danger small">
+        <div className="text-warning small">
           {warnings.map((w, i) => (
             <div key={i}>⚠ {w}</div>
           ))}

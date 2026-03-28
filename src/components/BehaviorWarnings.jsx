@@ -1,8 +1,9 @@
-const BehaviorWarnings = ({ warnings }) => {
-  if (!warnings || warnings.length === 0) return null;
+const BehaviorWarnings = ({ warnings = [] }) => {
+  if (!warnings.length) return null;
 
   return (
-    <div className="card p-2 mt-2 text-warning small">
+    <div className="card p-2 text-warning small">
+      <strong>Warnings</strong>
       {warnings.map((w, i) => (
         <div key={i}>⚠ {w}</div>
       ))}
