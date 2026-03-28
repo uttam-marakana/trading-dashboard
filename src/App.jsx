@@ -11,13 +11,15 @@ import TradeCalculator from "./components/TradeCalculator";
 import RiskEngine from "./components/RiskEngine";
 import Analytics from "./components/Analytics";
 import DisciplineScore from "./components/DisciplineScore";
+import PatternInsights from "./components/PatternInsights";
+import AdaptiveFeedback from "./components/AdaptiveFeedback";
 
 import { calculateSummary } from "./utils/calculations";
 
 function App() {
   const [trades, setTrades] = useLocalStorage("trades", []);
 
-  // 🔥 FILTER TODAY TRADES (CRITICAL FIX)
+  // FILTER TODAY TRADES (CRITICAL FIX)
   const today = new Date().toDateString();
 
   const todayTrades = trades.filter(
@@ -32,7 +34,8 @@ function App() {
     isLocked:
       todayTrades.length >= 3 ||
       summary.isLossLimitHit ||
-      summary.netPnL >= 1200,
+      summary.netPnL >= 1500,
+    history: trades,
   };
 
   const addTrade = (trade) => {
@@ -62,11 +65,15 @@ function App() {
 
               <TradeForm addTrade={addTrade} session={session} />
 
-              {/* 🔥 NEW */}
               <DisciplineScore trades={todayTrades} />
 
               <DisciplineGuard trades={todayTrades} />
+
               <Insights trades={trades} />
+
+              <PatternInsights trades={trades} />
+
+              <AdaptiveFeedback trades={trades} />
             </div>
           </div>
 
