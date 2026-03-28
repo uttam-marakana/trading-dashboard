@@ -10,6 +10,10 @@ export function checkDiscipline(session) {
   if (pnlToday <= -LIMITS.MAX_LOSS)
     return { allowed: false, reason: "Loss limit hit" };
 
+  if (pnlToday < 0 && tradesToday >= 2) {
+    return { allowed: false, reason: "Cooldown Required" };
+  }
+
   if (pnlToday >= LIMITS.MAX_PROFIT)
     return { allowed: false, reason: "Target reached" };
 
