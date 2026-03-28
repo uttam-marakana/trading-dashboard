@@ -1,12 +1,14 @@
+import { LIMITS } from "./constants";
+
+/* ===============================
+   💸 CHARGES
+================================= */
 const BROKERAGE_PER_ORDER = 20;
 const GST_RATE = 0.18;
 const STT_RATE = 0.0005;
 const EXCHANGE_RATE = 0.000035;
 const SEBI_RATE = 0.000001;
 const STAMP_RATE = 0.00003;
-
-const LOT_SIZE = 65;
-const DAILY_LOSS_LIMIT = 600;
 
 export const calculateCharges = (trade) => {
   const entry = Number(trade.entry || 0);
@@ -15,8 +17,8 @@ export const calculateCharges = (trade) => {
 
   if (!entry || !exit) return 0;
 
-  const buyValue = entry * LOT_SIZE * qty;
-  const sellValue = exit * LOT_SIZE * qty;
+  const buyValue = entry * LIMITS.LOT_SIZE * qty;
+  const sellValue = exit * LIMITS.LOT_SIZE * qty;
 
   const brokerage = BROKERAGE_PER_ORDER * 2;
   const exchange = (buyValue + sellValue) * EXCHANGE_RATE;
@@ -28,12 +30,50 @@ export const calculateCharges = (trade) => {
   return Number((brokerage + exchange + sebi + stt + stamp + gst).toFixed(2));
 };
 
+/* ===============================
+   📈 RAW PnL
+================================= */
 export const calculatePnL = (trade) => {
-  const { entry = 0, exit = 0, qty = 1 } = trade;
-  return (exit - entry) * LOT_SIZE * qty;
+  const entry = Number(trade.entry || 0);
+  const exit = Number(trade.exit || 0);
+  const qty = Number(trade.qty || 1);
+
+  if (!entry || !exit) return 0;
+
+  return (exit - entry) * LIMITS.LOT_SIZE * qty;
 };
 
-export const calculateSummary = (trades) => {
+/* ===============================
+   📊 NET PnL
+================================= */
+export const calculateNetPnL = (trade) => {
+  const pnl = calculatePnL(trade);
+  const charges = calculateCharges(trade);
+  return pnl - charges;
+};
+
+/* ===============================
+   🎯 RISK-REWARD (RR)
+================================= */
+export const calculateRR = (trade) => {
+  const entry = Number(trade.entry || 0);
+  const sl = Number(trade.sl || 0);
+  const exit = Number(trade.exit || 0);
+
+  if (!entry || !sl || !exit) return 0;
+
+  const risk = Math.abs(entry - sl);
+  const reward = Math.abs(exit - entry);
+
+  if (!risk) return 0;
+
+  return Number((reward / risk).toFixed(2));
+};
+
+/* ===============================
+   📊 SUMMARY
+================================= */
+export const calculateSummary = (trades = []) => {
   let totalPnL = 0;
   let totalCharges = 0;
 
@@ -52,6 +92,6 @@ export const calculateSummary = (trades) => {
     totalCharges,
     netPnL,
     totalTrades: trades.length,
-    isLossLimitHit: netPnL <= -DAILY_LOSS_LIMIT,
+    isLossLimitHit: netPnL <= -LIMITS.MAX_LOSS,
   };
 };

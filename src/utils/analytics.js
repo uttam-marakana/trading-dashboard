@@ -1,13 +1,15 @@
-import { calculatePnL } from "./calculations";
+import { calculateNetPnL, calculateRR } from "./calculations";
 import { LIMITS } from "./constants";
 
-/* STRATEGY */
+/* ===============================
+   📊 STRATEGY STATS
+================================= */
 export const getStrategyStats = (trades) => {
   const stats = {};
 
   trades.forEach((t) => {
     const key = t.strategy || "Unknown";
-    const pnl = calculatePnL(t);
+    const pnl = calculateNetPnL(t);
 
     if (!stats[key]) stats[key] = { pnl: 0, trades: 0 };
 
@@ -18,13 +20,17 @@ export const getStrategyStats = (trades) => {
   return stats;
 };
 
-/* TIME */
+/* ===============================
+   ⏱ TIME STATS
+================================= */
 export const getTimeStats = (trades) => {
   const stats = {};
 
   trades.forEach((t) => {
+    if (!t.date) return;
+
     const hour = new Date(t.date).getHours();
-    const pnl = calculatePnL(t);
+    const pnl = calculateNetPnL(t);
 
     if (!stats[hour]) stats[hour] = { pnl: 0, trades: 0 };
 
@@ -35,15 +41,21 @@ export const getTimeStats = (trades) => {
   return stats;
 };
 
-/* PERFORMANCE */
+/* ===============================
+   📈 PERFORMANCE
+================================= */
 export const getPerformanceStats = (trades) => {
   let wins = 0,
     losses = 0,
     totalWin = 0,
-    totalLoss = 0;
+    totalLoss = 0,
+    totalRR = 0;
 
   trades.forEach((t) => {
-    const pnl = calculatePnL(t);
+    const pnl = calculateNetPnL(t);
+    const rr = calculateRR(t);
+
+    totalRR += rr;
 
     if (pnl > 0) {
       wins++;
@@ -63,15 +75,21 @@ export const getPerformanceStats = (trades) => {
   const expectancy =
     total > 0 ? (winRate / 100) * avgWin + (1 - winRate / 100) * avgLoss : 0;
 
-  return { winRate, avgWin, avgLoss, expectancy };
+  const avgRR = total ? totalRR / total : 0;
+
+  return { winRate, avgWin, avgLoss, expectancy, avgRR };
 };
 
-/* EXPECTANCY */
+/* ===============================
+   🎯 EXPECTANCY
+================================= */
 export const calculateExpectancy = (trades) => {
   return getPerformanceStats(trades).expectancy;
 };
 
-/* MISTAKE STATS (NEW) */
+/* ===============================
+   ❌ MISTAKE STATS
+================================= */
 export const getMistakeStats = (trades) => {
   const stats = {};
 
@@ -83,7 +101,9 @@ export const getMistakeStats = (trades) => {
   return stats;
 };
 
-/* AI INSIGHTS */
+/* ===============================
+   🧠 AI INSIGHTS
+================================= */
 export const getAIInsights = (trades) => {
   const insights = [];
 
@@ -92,31 +112,22 @@ export const getAIInsights = (trades) => {
 
   const perf = getPerformanceStats(trades);
 
-  // Core signals
   if (perf.winRate < 40) insights.push("Low win rate → improve entries");
 
   if (perf.expectancy < 0)
     insights.push("System losing money → review strategy");
 
-  // Direction discipline
+  if (perf.avgRR < 1) insights.push("Low RR trades → improve risk-reward");
+
   const types = [...new Set(trades.map((t) => t.type))];
   if (types.length > 1) insights.push("Avoid CE/PE switching");
 
-  // Overtrading
-  if (trades.length > LIMITS.MAX_TRADES) insights.push("Overtrading detected");
+  const losses = trades.filter((t) => calculateNetPnL(t) < 0);
+  if (losses.length >= 2) insights.push("Multiple losses → reduce size");
 
-  // Loss cluster
-  const losses = trades.filter((t) => calculatePnL(t) < 0);
-  if (losses.length >= 2)
-    insights.push("Multiple losses → reduce size or stop");
-
-  // Risk violation
-  const risky = trades.filter(
-    (t) => t.risk && t.risk > LIMITS.MAX_RISK_PER_TRADE,
-  );
+  const risky = trades.filter((t) => t.risk && t.risk > LIMITS.MAX_RISK);
   if (risky.length) insights.push("High risk trades → tighten SL");
 
-  // Behavior layer
   const lowConfidence = trades.filter((t) => t.confidence <= 2);
   if (lowConfidence.length) insights.push("Low confidence trades detected");
 
