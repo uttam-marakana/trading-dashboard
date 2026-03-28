@@ -1,13 +1,17 @@
+import { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { v4 as uuidv4 } from "uuid";
 import { executionEngine } from "../core/executionEngine";
 import PreTradeInsights from "./PreTradeInsights";
+import BehaviorWarnings from "./BehaviorWarnings";
 
 const premiumOptions = ["ATM", "ITM", "OTM"];
 const strategies = ["Scalping", "ORB", "Reversal", "Breakdown"];
 const mistakes = ["None", "Late Entry", "FOMO", "No SL", "Overtrade"];
 
 const TradeForm = ({ addTrade, session }) => {
+  const [warnings, setWarnings] = useState([]);
+
   return (
     <Formik
       initialValues={{
@@ -54,9 +58,11 @@ const TradeForm = ({ addTrade, session }) => {
         const result = executionEngine(tradeData, session);
 
         if (!result.allowed) {
-          alert(`🚫 ${result.reason}`);
+          alert(`🚫Blocked: ${result.reason}`);
           return;
         }
+
+        setWarnings(result.warnings || []);
 
         addTrade(result.trade);
         resetForm();
@@ -129,12 +135,7 @@ const TradeForm = ({ addTrade, session }) => {
             </div>
 
             <div className="col-6">
-              <Field
-                name="qty"
-                
-                type="number"
-                className="form-control"
-              />
+              <Field name="qty" type="number" className="form-control" />
               <ErrorMessage
                 name="qty"
                 component="div"
@@ -167,8 +168,11 @@ const TradeForm = ({ addTrade, session }) => {
               />
             </div>
 
-            {/* 🔥 PRE-TRADE INTELLIGENCE */}
+            {/* PRE-TRADE INTELLIGENCE */}
             <PreTradeInsights values={values} />
+
+            {/*Behavior warnings UI */}
+            <BehaviorWarnings warnings={warnings} />
 
             <button className="btn btn-primary w-100 mt-2">
               Execute Trade
