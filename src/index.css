@@ -1,9 +1,28 @@
-/* ----- 1. DESIGN TOKENS -------------------- */
+/* =========================================================
+   PREMIUM RESPONSIVE DASHBOARD DESIGN SYSTEM
+   Dark + Light Theme + Mobile First + Premium UI
+========================================================= */
+
+/* ---------- 1. DESIGN TOKENS ---------- */
 
 :root {
+  color-scheme: dark;
+
   /* COLORS */
   --bg: #020617;
-  --bg-gradient: radial-gradient(circle at top, #1e293b, #020617);
+
+  --bg-gradient:
+    radial-gradient(
+      circle at top left,
+      rgba(168, 85, 247, 0.12),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at bottom right,
+      rgba(59, 130, 246, 0.1),
+      transparent 30%
+    ),
+    #020617;
 
   --surface-1: rgba(255, 255, 255, 0.04);
   --surface-2: rgba(255, 255, 255, 0.06);
@@ -11,88 +30,192 @@
 
   --border: rgba(255, 255, 255, 0.08);
 
-  --text-primary: #fff;
+  --text-primary: #ffffff;
   --text-secondary: #cbd5f5;
   --text-muted: #94a3b8;
 
   --profit: #22c55e;
   --loss: #ef4444;
   --warning: #f59e0b;
+
   --accent: #a855f7;
+  --accent-secondary: #3b82f6;
 
   /* SPACING */
-  --space-1: 8px;
-  --space-2: 12px;
-  --space-3: 16px;
-  --space-4: 24px;
+  --space-1: clamp(6px, 1vw, 10px);
+  --space-2: clamp(10px, 1.5vw, 14px);
+  --space-3: clamp(16px, 2vw, 20px);
+  --space-4: clamp(24px, 3vw, 32px);
 
   /* TYPOGRAPHY */
-  --font-sm: 12px;
-  --font-md: 14px;
-  --font-lg: 18px;
-  --font-xl: 24px;
+  --font-sm: clamp(12px, 1vw, 14px);
+  --font-md: clamp(14px, 1.2vw, 16px);
+  --font-lg: clamp(18px, 2vw, 22px);
+  --font-xl: clamp(24px, 3vw, 40px);
 
   /* UI */
   --radius: 14px;
-  --blur: blur(8px);
+  --radius-sm: 10px;
+  --radius-lg: 22px;
 
-  /* TRANSITION (FIXED) */
+  --blur: blur(16px);
+
+  --container-width: 1600px;
+  --sidebar-width: 300px;
+
+  /* SHADOWS */
+  --shadow-sm: 0 6px 20px rgba(0, 0, 0, 0.18);
+  --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.28);
+  --shadow-lg: 0 18px 50px rgba(0, 0, 0, 0.4);
+
+  /* TRANSITION */
   --transition:
-    background 0.25s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease,
+    transform 0.2s ease, box-shadow 0.25s ease;
 }
 
-/* LIGHT MODE */
+/* ---------- 2. LIGHT THEME ---------- */
 
 [data-theme="light"] {
-  --bg: #f4f6fb;
-  --bg-gradient: linear-gradient(to bottom, #ffffff, #eaeef6);
+  color-scheme: light;
 
-  --surface-1: rgba(255, 255, 255, 0.9);
-  --surface-2: #ffffff;
+  --bg: #f4f6fb;
+
+  --bg-gradient:
+    radial-gradient(
+      circle at top left,
+      rgba(124, 58, 237, 0.08),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at bottom right,
+      rgba(59, 130, 246, 0.06),
+      transparent 30%
+    ),
+    linear-gradient(to bottom, #ffffff, #eaeef6);
+
+  --surface-1: rgba(255, 255, 255, 0.82);
+  --surface-2: rgba(255, 255, 255, 0.95);
   --surface-hover: #ffffff;
 
   --border: rgba(0, 0, 0, 0.08);
 
-  --text-primary: #000;
+  --text-primary: #000000;
   --text-secondary: #1a1a1a;
   --text-muted: #6b7280;
 
   --accent: #7c3aed;
+
+  --shadow-sm: 0 4px 14px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 10px 24px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 18px 40px rgba(0, 0, 0, 0.14);
 }
 
-/* ----- 2. BASE -------------------- */
+/* ---------- 3. BASE ---------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
 
 body {
   margin: 0;
-  background: var(--bg-gradient);
+
+  min-height: 100vh;
+
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(124, 58, 237, 0.08),
+      transparent 22%
+    ),
+    radial-gradient(
+      circle at bottom right,
+      rgba(59, 130, 246, 0.06),
+      transparent 24%
+    ),
+    var(--bg);
+
   color: var(--text-secondary);
+
   font-family:
+    Inter,
     system-ui,
     -apple-system,
     sans-serif;
+
+  font-size: var(--font-md);
+
+  line-height: 1.6;
+
+  overflow-x: hidden;
+
   transition: var(--transition);
 }
+
+/* ---------- 4. TYPOGRAPHY ---------- */
 
 h1,
 h2,
 h3,
 h4,
 h5 {
+  margin: 0;
+
   color: var(--text-primary);
+
+  letter-spacing: -0.04em;
+
+  font-weight: 700;
 }
 
-/* ----- 3. UTILITIES -------------------- */
+h1 {
+  font-size: var(--font-xl);
+}
+
+h2 {
+  font-size: clamp(22px, 2vw, 30px);
+}
+
+h3 {
+  font-size: clamp(18px, 1.5vw, 24px);
+}
+
+p {
+  margin: 0;
+}
+
+/* ---------- 5. UTILITIES ---------- */
 
 .flex {
   display: flex;
 }
+
 .flex-col {
   flex-direction: column;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.gap-1 {
+  gap: var(--space-1);
 }
 
 .gap-2 {
   gap: var(--space-2);
 }
+
 .gap-3 {
   gap: var(--space-3);
 }
@@ -100,6 +223,7 @@ h5 {
 .p-2 {
   padding: var(--space-2);
 }
+
 .p-3 {
   padding: var(--space-3);
 }
@@ -107,9 +231,11 @@ h5 {
 .text-profit {
   color: var(--profit);
 }
+
 .text-loss {
   color: var(--loss);
 }
+
 .text-warning {
   color: var(--warning);
 }
@@ -119,67 +245,124 @@ h5 {
   pointer-events: none;
 }
 
-/* ----- 4. CARD SYSTEM -------------------- */
+/* ---------- 6. CARD SYSTEM ---------- */
 
 .card {
+  position: relative;
+
+  overflow: hidden;
+
   background: var(--surface-2);
+
   backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+
   border: 1px solid var(--border);
+
   border-radius: var(--radius);
+
   padding: var(--space-3);
+
   transition: var(--transition);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+
+  box-shadow:
+    var(--shadow-md),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 .card:hover {
   background: var(--surface-hover);
-  transform: translateY(-2px);
+
+  transform: translateY(-4px);
+
+  border-color: rgba(168, 85, 247, 0.25);
+
+  box-shadow:
+    var(--shadow-lg),
+    0 0 0 1px rgba(168, 85, 247, 0.12);
 }
 
-[data-theme="light"] .card {
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-}
-
-/* ----- 5. INPUT SYSTEM -------------------- */
+/* ---------- 7. INPUT SYSTEM ---------- */
 
 input,
 select,
+textarea,
 .form-control {
   width: 100%;
-  background: var(--surface-1);
-  border: 1px solid var(--border);
-  color: var(--text-primary);
-  border-radius: 10px;
-  padding: 10px;
-}
 
-input:focus,
-select:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.25);
+  background: var(--surface-1);
+
+  border: 1px solid var(--border);
+
+  color: var(--text-primary);
+
+  border-radius: var(--radius-sm);
+
+  padding: 12px;
+
+  font-size: var(--font-md);
+
+  transition: var(--transition);
+
   outline: none;
 }
 
-/* ----- 6. BUTTON SYSTEM -------------------- */
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-muted);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--accent);
+
+  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.2);
+}
+
+/* ---------- 8. BUTTON SYSTEM ---------- */
 
 .btn {
-  padding: 10px 14px;
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  padding: 12px 18px;
+
   border-radius: var(--radius);
+
   border: none;
+
   cursor: pointer;
+
+  font-size: var(--font-md);
+  font-weight: 600;
+
   transition: var(--transition);
 }
 
 .btn-primary {
   background: linear-gradient(135deg, #7c3aed, #a855f7);
-  color: #fff;
+
+  color: #ffffff;
+
+  box-shadow: 0 10px 25px rgba(168, 85, 247, 0.28);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+
+  box-shadow: 0 16px 35px rgba(168, 85, 247, 0.4);
 }
 
 .btn:active {
   transform: scale(0.96);
 }
 
-/* ----- 7. TRADE STATES -------------------- */
+/* ---------- 9. TRADE STATES ---------- */
 
 .trade-allowed {
   border-left: 4px solid var(--profit);
@@ -189,16 +372,15 @@ select:focus {
   border-left: 4px solid var(--loss);
 }
 
-/* OPTIONAL INTENSITY */
-
 .profit-strong {
   color: #16a34a;
 }
+
 .loss-strong {
   color: #dc2626;
 }
 
-/* ----- 8. FEEDBACK ANIMATIONS -------------------- */
+/* ---------- 10. FEEDBACK ANIMATIONS ---------- */
 
 .flash-profit {
   animation: flashGreen 0.5s ease;
@@ -206,29 +388,40 @@ select:focus {
 
 @keyframes flashGreen {
   from {
-    background: rgba(34, 197, 94, 0.2);
+    background: rgba(34, 197, 94, 0.18);
   }
+
   to {
     background: transparent;
   }
 }
 
-/* ----- 9. LAYOUT SYSTEM -------------------- */
+/* ---------- 11. LAYOUT SYSTEM ---------- */
 
 .app-container {
+  width: 100%;
+  max-width: var(--container-width);
+
   min-height: 100vh;
-  padding: var(--space-2);
+
+  margin: 0 auto;
+
+  padding: var(--space-3);
 }
 
 .grid-layout {
   display: grid;
-  grid-template-columns: minmax(260px, 320px) 1fr;
+
+  grid-template-columns: 1fr;
+
   gap: var(--space-3);
 }
 
 .grid-sub {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+
+  grid-template-columns: 1fr;
+
   gap: var(--space-3);
 }
 
@@ -239,20 +432,65 @@ select:focus {
   gap: var(--space-3);
 }
 
-/* ----- 10. RESPONSIVE -------------------- */
+/* ---------- 12. TABLET ---------- */
 
-@media (max-width: 1024px) {
-  .grid-layout {
-    grid-template-columns: 1fr;
+@media (min-width: 768px) {
+  .grid-sub {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
-@media (max-width: 768px) {
-  .grid-sub {
-    grid-template-columns: 1fr;
-  }
+/* ---------- 13. DESKTOP ---------- */
 
+@media (min-width: 1024px) {
+  .grid-layout {
+    grid-template-columns:
+      minmax(260px, var(--sidebar-width))
+      minmax(0, 1fr);
+  }
+}
+
+/* ---------- 14. LARGE DESKTOP ---------- */
+
+@media (min-width: 1440px) {
+  .app-container {
+    padding: var(--space-4);
+  }
+}
+
+/* ---------- 15. MOBILE OPTIMIZATION ---------- */
+
+@media (max-width: 768px) {
   .card {
     padding: var(--space-2);
   }
+
+  .btn {
+    width: 100%;
+  }
+
+  h1 {
+    line-height: 1.1;
+  }
+}
+
+/* ---------- 16. SCROLLBAR ---------- */
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
 }
