@@ -1,13 +1,7 @@
-import { useTheme } from "../context/ThemeContext";
+// ThemeToggle removed: UI is kept clean/premium without theme switching.
+// This component is intentionally empty to avoid showing any toggle UI.
 
-const ThemeToggle = () => {
-  const { theme, toggleTheme } = useTheme();
-
-  return (
-    <button className="theme-toggle" onClick={toggleTheme}>
-      {theme === "dark" ? "🌙 Dark" : "☀️ Light"}
-    </button>
-  );
-};
+const ThemeToggle = () => null;
 
 export default ThemeToggle;
+
