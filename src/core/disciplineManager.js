@@ -1,7 +1,8 @@
 import { LIMITS } from "../utils/constants";
 
 export function checkDiscipline(session) {
-  const { tradesToday, pnlToday } = session;
+  const { tradesToday = 0, pnlToday = 0 } = session || {};
+
 
   if (tradesToday >= LIMITS.MAX_TRADES) {
     return { allowed: false, reason: "Max trades reached" };
