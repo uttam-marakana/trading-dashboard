@@ -2,8 +2,8 @@ import { patternEngine } from "../core/patternEngine";
 import { adaptiveRules } from "../utils/adaptiveRules";
 
 const AdaptiveFeedback = ({ trades }) => {
-  const patterns = patternEngine(trades);
   const rules = adaptiveRules(patternEngine(trades));
+
 
   if (!rules.length) return null;
 

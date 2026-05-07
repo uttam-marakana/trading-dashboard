@@ -9,16 +9,20 @@ import {
 import { calculateNetPnL } from "../utils/calculations";
 
 const EquityChart = ({ trades }) => {
-  let cumulative = 0;
+  const data = trades.reduce(
+    (acc, t, i) => {
+      const prevEquity = i === 0 ? 0 : acc[i - 1].equity;
+      const equity = prevEquity + calculateNetPnL(t);
 
-  const data = trades.map((t, i) => {
-    cumulative += calculateNetPnL(t);
+      acc.push({
+        index: i + 1,
+        equity,
+      });
 
-    return {
-      index: i + 1,
-      equity: cumulative,
-    };
-  });
+      return acc;
+    },
+    [],
+  );
 
   return (
     <div className="card p-3">

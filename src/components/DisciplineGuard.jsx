@@ -1,7 +1,9 @@
 import { checkDiscipline } from "../core/disciplineManager";
 
-const DisciplineGuard = ({ trades, session }) => {
+const DisciplineGuard = ({ session }) => {
   const result = checkDiscipline(session);
+
+
 
   return (
     <div className="card p-3">
