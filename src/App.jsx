@@ -30,20 +30,25 @@ function App() {
 
   const summary = calculateSummary(todayTrades);
 
-  // SESSION (DATA ONLY)
   const session = {
     tradesToday: todayTrades.length,
     pnlToday: summary.netPnL,
     history: trades,
+    // keep UI lock aligned with engine discipline
+    isLocked:
+      summary.isLossLimitHit || todayTrades.length >= 3 || summary.netPnL >= 1500,
   };
+
 
   const addTrade = (trade) => {
     const result = executionEngine(trade, session);
 
     if (!result.allowed) {
-      alert(`🚫 ${result.reason}`);
-      return result; // 🔥 return for UI handling
+      setFlash("blocked");
+      setTimeout(() => setFlash(null), 900);
+      return result; // UI can inspect result.reason/details
     }
+
 
     setTrades((prev) => [result.trade, ...prev]);
 
