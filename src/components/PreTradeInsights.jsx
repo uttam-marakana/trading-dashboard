@@ -1,9 +1,10 @@
 import {
   calculateCharges,
-  calculatePnL,
+
   calculateNetPnL,
   calculateRR,
 } from "../utils/calculations";
+
 import { LIMITS } from "../utils/constants";
 
 const PreTradeInsights = ({ values }) => {
@@ -16,9 +17,11 @@ const PreTradeInsights = ({ values }) => {
 
   const trade = { entry, exit, sl, qty };
 
-  const pnl = calculatePnL(trade);
+  // const pnl = calculatePnL(trade);
+
   const charges = calculateCharges(trade);
   const net = calculateNetPnL(trade);
+
 
   const risk = Math.abs(entry - sl) * LIMITS.LOT_SIZE * qty;
   const rr = calculateRR(trade);
