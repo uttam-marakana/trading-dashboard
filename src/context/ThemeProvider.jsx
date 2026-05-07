@@ -1,39 +1,31 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo } from "react";
 
-import { getInitialTheme } from "./themeStorage";
 import { ThemeContext } from "./ThemeContext.jsx";
 
-
-
 const ThemeProvider = ({ children }) => {
-  const [theme, setTheme] = useState(getInitialTheme);
-
+  // Premium: no theme switching UI/code; always run in light theme.
   useEffect(() => {
     const root = document.documentElement;
-    root.setAttribute("data-theme", theme);
-    localStorage.setItem("theme", theme);
-  }, [theme]);
-
-  const toggleTheme = () => {
-    setTheme((prev) => (prev === "dark" ? "light" : "dark"));
-  };
+    root.setAttribute("data-theme", "light");
+    localStorage.setItem("theme", "light");
+  }, []);
 
   const value = useMemo(
     () => ({
-      theme,
-      setTheme,
-      toggleTheme,
-      isDark: theme === "dark",
+      theme: "light",
+      // keep stable API in case any component still consumes it
+      setTheme: () => {},
+      toggleTheme: () => {},
+      isDark: false,
     }),
-    [theme],
+    [],
   );
 
-  return (
-    <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
-  );
+  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 };
 
 export default ThemeProvider;
+
 
 
 
